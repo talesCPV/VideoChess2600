@@ -1,38 +1,63 @@
           ************VIDEO CHESS 2600****************
 
-	L� pelo final dos anos 80 eu era um garoto apaixonado 
+	Lá pelo final dos anos 80 eu era um garoto apaixonado 
 por Xadrez, jogava as vezes com meu pai mas na maioria do tempo
-n�o tinha com quem jogar. Nesta �poca eu tinha um Atari 2600
+não tinha com quem jogar. Nesta época eu tinha um Atari 2600
 e quando descobri que existia um jogo de xadrez que eu poderia
-jogar contra o computador foi o m�ximo, me lembro de quando venci
-minha primeira partida contra a m�quina, aquilo me fez me achar
-o melhor jogador de xadrez do mundo, mas no fundo eu j� me perguntava:
-Como uma m�quina pode jogar xadrez? Qual o algor�timo que rodava por
-de tr�s das jogadas? Aquele tempo que demorava entre as jogadas do
+jogar contra o computador foi o máximo, me lembro de quando venci
+minha primeira partida contra a máquina, aquilo me fez me achar
+o melhor jogador de xadrez do mundo, mas no fundo eu já me perguntava:
+Como uma máquina pode jogar xadrez? Qual o algorítimo que rodava por
+de trás das jogadas? Aquele tempo que demorava entre as jogadas do
 computador ele estava realmente "pensando"?
-	Hoje existem milhares de algor�timos que jogam xadrez, alguns
-at� com IA, mas eu resolvi criar o meu pr�prio algor�timo a fim de 
-praticar um pouco de programa��o e aproveitar para me divertir no 
+	Hoje existem milhares de algorítimos que jogam xadrez, alguns
+até com IA, mas eu resolvi criar o meu próprio algorítimo a fim de 
+praticar um pouco de programação e aproveitar para me divertir no 
 processo. Para efetuar tal desafio eu escolhi a linguagem Python, por
-ser altamente port�vel para outras plataformas.Ent�o vamos a 
-organiza��o do c�digo, dividi em 3 camadas principais:
+ser altamente portável para outras plataformas.Então vamos a 
+organização do código, dividi em 3 camadas principais:
 
-1) GR�FICA:
+1) GRÁFICA:
 	*Pygame
 	*Abre a imagem 'board.png' na tela
-	*Recorta a imagem 'pieces.png' (sprites das pe�as do jogo)
-	*Monta a lista tabuleiro na tela (posi��es das pe�as no tabuleiro)
+	*Recorta a imagem 'pieces.png' (sprites das peças do jogo)
+	*Monta a lista tabuleiro na tela (posições das peças no tabuleiro)
 	*Posiciona o cursor no tabuleiro no evento onClick do mouse
 	***** CHAMA A SEGUNDA CAMADA "POSSIBILIDADES"
 
 2) POSSIBILIDADES:
 	*Recebe as coordenadas do click no tabuleiro
-	*Analisa e cria uma lista as op��es de movimentos
-	 poss�veis para pe�a selecionada
-	*Se o segundo click for em uma casa poss�vel, efetua
-	 o movimento da pe�a
+	*Analisa e cria uma lista as opções de movimentos
+	 possíveis para peça selecionada
+	*Se o segundo click for em uma casa possível, efetua
+	 o movimento da peça
 
-3) INTELIG�NCIA ARTIFICIAL
-	*Cria listas com localiza��o das pe�as
+3) INTELIGÊNCIA ARTIFICIAL
+	*Cria listas com localização das peças
+	*** Gere uma lista com as ameaças sofridas por ordem de importância (Rei, Dama, Cavalo, Bispo ou Torre, Peão)
+	*ANÁLISE DOS DADOS:
+	#### LÓGICA DE DEFESA ####
+	-Alguma peça em perigo?
+		SIM:
+		-São quantas peças adversárias me ameaçãndo, mais de uma?
+			SIM:
+			-Posso mexer a minha peça para um lugar seguro?
+				SIM
+				-Saída(mover a peça ameaçada e vá para lógica de recursividade se há perigo[*** Ameaças = 0])
+				NÃO?
+				-Saída(Abandonar esta peça, vá para lógica de ataque)
+			NÃO:
+			-Saída(Abandonar esta peça, vá para lógica de ataque)
+		NÃO:
+		-Posso atacar a peça adversária?
+			SIM:
+			-Saída(Simule a jogada e vá para lógica de recursividade se há perigo[*** Ameaças = 0])
+			NÃO:
+			-Posso mexer a minha peça para um lugar seguro?
+				SIM
+				-Saída(mover a peça ameaçada e vá para lógica de recursividade se há perigo[*** Ameaças = 0])
+				NÃO?
+				-Saída(Abandonar esta peça, vá para lógica de ataque)
+		
 
 
