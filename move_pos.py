@@ -176,7 +176,7 @@ def king_op(x,y,cor, tabuleiro):
 
     return lista
 
-def jogada(pos1, pos2,possible, tab):
+def jogada_plr(pos1, pos2,possible, tab):
     resp = False
     x1 = pos1[0]
     y1 = pos1[1]
@@ -190,3 +190,14 @@ def jogada(pos1, pos2,possible, tab):
             tab[y1][x1] = (' ',' ')
             resp = True
     return resp
+
+def jogada_cpu(pos1,pos2,tab):
+    x1 = pos1[0]
+    y1 = pos1[1]
+    x2 = pos2[0]
+    y2 = pos2[1]
+
+    tab[y2][x2] = tab[y1][x1]
+    tab[y1][x1] = (' ', ' ')
+
+

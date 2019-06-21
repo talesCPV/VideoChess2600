@@ -1,5 +1,6 @@
 import move_pos as mvp
 
+
 def main_ai(tab):
     cpu_color = 'P'
     plr_color = 'B'
@@ -7,6 +8,7 @@ def main_ai(tab):
     plr = []
     cpu_pos = []
     plr_pos = []
+    exit = []
     for y in range(8):
         for x in range(8):
             if tab[y][x][0] == cpu_color:
@@ -18,12 +20,29 @@ def main_ai(tab):
     plr_pos += return_pos_list(plr, tab)
 
     risco = []
-    for x in cpu:
+    for x in cpu: # existe risco?
         aux = check_risk((x[0],x[1],import_degree(x[2][1])), plr_pos)
-        if len(aux) > 0:
+        if len(aux) > 0: # Sim, existe
             risco.append(aux)
-#    print(reorganiza_lista_risco(risco)) # lista de risco já organizada por prioridade de analise
-    reorganiza_lista_risco(risco)
+            reorganiza_lista_risco(risco) # organiza por ordem de prioridade
+
+            if (len(risco[0][1]) > 1):
+                print('corra para as montanhas!!!')
+            else:
+                print('Da pra contra atacar?')
+                pos_enemy = (risco[0][1][0][0],risco[0][1][0][1])
+                aux_2 = check_risk(pos_enemy,cpu_pos)
+                if (len(aux_2)>0):
+                    x_ = aux_2[1][0][0]
+                    y_ = aux_2[1][0][1]
+                    exit.append(((x_, y_),(aux_2[0])))
+                    mvp.jogada_cpu((x_,y_),aux_2[0],tab)
+#                    main.turn = 'B'
+                    print('Jogada executada', exit)
+                    break
+
+
+
     print(risco)
 
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
@@ -85,6 +104,12 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     if not(len(list[1])> 0):
         while len(list)>0:
             list.remove(list[0])
-    print('github!!! Pull back ok')
 
     return list
+
+def can_strike_back(peca,pos):
+    x_ = peca[0]
+    y_ = peca[1]
+
+    for aux in pos:
+        print(aux)

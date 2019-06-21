@@ -2,7 +2,7 @@ import pygame
 import move_pos as mvp
 import move_ai as mai
 from pygame.locals import *
-import sys, os
+import os
 
 ############ VARIÁVEIS ###########
 turn = 'B'
@@ -84,7 +84,7 @@ def mouse_click(pos):
     y = get_cord_pos(pos)[1]
     if len(click)>0:
         xy = (click[0],click[1]) #guarda o valor anterior de click
-        if mvp.jogada(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
+        if mvp.jogada_plr(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
             if turn == 'B':
                 turn = 'P'
                 mai.main_ai(tabuleiro)
