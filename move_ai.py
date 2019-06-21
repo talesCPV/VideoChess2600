@@ -85,5 +85,6 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     if not(len(list[1])> 0):
         while len(list)>0:
             list.remove(list[0])
+    print('github!!!')
 
     return list
