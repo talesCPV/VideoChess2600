@@ -104,7 +104,7 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     if not(len(list[1])> 0):
         while len(list)>0:
             list.remove(list[0])
-
+    print(list)
     return list
 
 def can_strike_back(peca,pos):
@@ -113,3 +113,6 @@ def can_strike_back(peca,pos):
 
     for aux in pos:
         print(aux)
+
+def runaway(peca,tab):
+    print('runway!!!')

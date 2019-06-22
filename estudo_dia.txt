@@ -1,0 +1,19 @@
+22/06
+    return_pos_list(list,tab):
+        list = [[x,y,('cor','tipo da peça, ex: D')], ...] #lista de posições
+        tab = [lista das posições do tabuleiro] #tabuleiro
+        return_pos_list recebe os parâmetros acima e retorna uma lista com as posições e retorna
+          uma lista com as posições possíveis de cada item de 'list'
+
+    check_risk(casa,lista)
+        casa = (x,y)
+        lista = [[[(x,y)],x, y, 'cor','peca'], ...], onde os primeiros (x,y) são a casa onde pretende ir e o segundo é a sua peça, se retornar uma lista vazia  esta ok
+
+
+    runaway(peca,tab)
+        peca = [x,y]
+        tab = [tabuleiro]
+        1) buscar no tab as informações da posição x,y
+        2) montar uma variável list=[[x,y,('cor','peca')]]
+        3) chamar return_pos_list(list,tab) e salvar as possibilidades numa lista
+        4) varrer esta lista passando para check_risk(casa,lista)
