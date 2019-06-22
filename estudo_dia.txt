@@ -17,3 +17,4 @@
         2) montar uma variável list=[[x,y,('cor','peca')]]
         3) chamar return_pos_list(list,tab) e salvar as possibilidades numa lista
         4) varrer esta lista passando para check_risk(casa,lista)
+        5) assim que achar uma casa segura (check_risk retornar []), efetuar o movimento
