@@ -27,7 +27,16 @@ def main_ai(tab):
             reorganiza_lista_risco(risco) # organiza por ordem de prioridade
 
             if (len(risco[0][1]) > 1):
-                print('corra para as montanhas!!!')
+                if (risco[0][0][2]>1):
+                    print('corra para as montanhas!!!')
+                else:
+                    print('abandonar o peão pra morrer, coitado')
+                # vai para corra para as montanhas, esta aqui só pra teste
+                x_ = risco[0][0][0] #montando o parâmetro 'list' de return_pos_list
+                y_ = risco[0][0][1]
+                if (len(runaway([x_,y_],tab))>0):
+                    mvp.jogada_cpu((x_, y_), runaway([x_,y_],tab)[0], tab)
+                    print('não foi a jogada mais inteligente, se pudesse comer seria melhor')
             else:
                 print('Da pra contra atacar?')
                 pos_enemy = (risco[0][1][0][0],risco[0][1][0][1])
@@ -41,9 +50,6 @@ def main_ai(tab):
                     print('Jogada executada', exit)
                     break
 
-
-
-    print(risco)
 
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
     sub_list = []
@@ -104,7 +110,6 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     if not(len(list[1])> 0):
         while len(list)>0:
             list.remove(list[0])
-    print(list)
     return list
 
 def can_strike_back(peca,pos):
@@ -116,3 +121,22 @@ def can_strike_back(peca,pos):
 
 def runaway(peca,tab):
     print('runway!!!')
+    resp = []
+    x = peca[0]
+    y = peca[1]
+    cor = tab[y][x][0]
+    peca = tab[y][x][1]
+    list = []
+    list.append([x, y, (cor, peca)])  # cria a lista para parâmetro de return_pos_list
+    list = return_pos_list(list, tab)  # uso a mesma variável list_ para pegar o resultado da função
+    #faltou ver se este local é seguro
+    print('LIST ',list)
+
+    for x in list[0][0]:
+        if (tab[x[1]][x[0]][0].strip() == '' ): # casa vazia e segura
+            resp.append(x)
+            print('casa vazia', x[0],x[1])
+    #falta priorizar comer a peça inimiga
+    return resp
+
+
