@@ -20,3 +20,16 @@
         5) assim que achar uma casa segura (check_risk retornar []), efetuar o movimento
 
         PS: NA FUNÇÃO RUNWAY, FALTA VERIFICAR A LISTA DE POSSIBILIDADES SE TODAS SÃO SEGURAS
+
+24/06
+    simula_jogada(tab, jogada)
+        tab = tabuleiro
+        jogada = [pos inicial , pos final]
+
+        1) new_tab = cópia de tab, sem vínculo
+        2) faz o movimento (jogada) em new_tab
+
+        Simula jogada finalizado
+
+        PS: Quando sua peça é ameaçada por mais de uma peça ela analiza a melhor saída e executa.
+

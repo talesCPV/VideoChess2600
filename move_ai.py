@@ -1,4 +1,5 @@
 import move_pos as mvp
+import copy
 
 
 def main_ai(tab):
@@ -35,8 +36,8 @@ def main_ai(tab):
                 x_ = risco[0][0][0] #montando o parâmetro 'list' de return_pos_list
                 y_ = risco[0][0][1]
                 if (len(runaway([x_,y_],tab))>0):
-                    mvp.jogada_cpu((x_, y_), runaway([x_,y_],tab)[0], tab)
-                    print('não foi a jogada mais inteligente, se pudesse comer seria melhor')
+                    print('movimento...',(x_, y_), runaway([x_,y_],tab))
+                    mvp.jogada_cpu((x_, y_), runaway([x_,y_],tab), tab)
             else:
                 print('Da pra contra atacar?')
                 pos_enemy = (risco[0][1][0][0],risco[0][1][0][1])
@@ -103,9 +104,10 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     list = [casa,[]]
     for pos in lista:
         for sub in pos[0]:
+#            print('')
             if (casa[0] == sub[0] and casa[1] == sub[1]):
+                print(casa, pos)
                 list[1].append(([pos[1],pos[2],pos[4]]))
-#                list[1].append((pos))
 
     if not(len(list[1])> 0):
         while len(list)>0:
@@ -130,13 +132,40 @@ def runaway(peca,tab):
     list.append([x, y, (cor, peca)])  # cria a lista para parâmetro de return_pos_list
     list = return_pos_list(list, tab)  # uso a mesma variável list_ para pegar o resultado da função
     #faltou ver se este local é seguro
-    print('LIST ',list)
+    pos_ok = []
+    for aux in list[0][0]:
+        if simula_jogada(tab,((x,y),aux)):
+            pos_ok.append(aux)
+    if len(pos_ok)> 0:
+        escolha = pos_ok[0]
+        for aux in pos_ok:
+            if tab[aux[1]][aux[0]][0] == 'B':
+                escolha = aux
+    else:
+        escolha = []
 
-    for x in list[0][0]:
-        if (tab[x[1]][x[0]][0].strip() == '' ): # casa vazia e segura
-            resp.append(x)
-            print('casa vazia', x[0],x[1])
-    #falta priorizar comer a peça inimiga
+    return escolha
+
+
+def simula_jogada(tab,jogada):
+    new_tab = copy.deepcopy(tab)
+    resp = True
+    x1 = jogada[0][0]
+    y1 = jogada[0][1]
+    x2 = jogada[1][0]
+    y2 = jogada[1][1]
+    new_tab[y2][x2] = new_tab[y1][x1]
+    new_tab[y1][x1] = (' ',' ')
+    brancas = []
+    for y in range(8):
+        for x in range(8):
+            if new_tab[y][x][0] == 'B':
+                brancas.append([x,y,new_tab[y][x]])
+
+    new_reach = return_pos_list(brancas,new_tab)
+    for x in new_reach:  # existe risco?
+        for y in x[0]:
+            if (x2 == y[0] and y2 == y[1]):
+                resp = False
+
     return resp
-
-
