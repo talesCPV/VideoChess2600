@@ -33,3 +33,6 @@
 
         PS: Quando sua peça é ameaçada por mais de uma peça ela analiza a melhor saída e executa.
 
+26/06
+    alteração em runaway: verificação se 'list' não ficou zerada após 'return_pos_list'
+    Acho que terminei a defesa, tem que testar bastante e depois programar o ataque

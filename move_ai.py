@@ -27,22 +27,26 @@ def main_ai(tab):
             risco.append(aux)
             reorganiza_lista_risco(risco) # organiza por ordem de prioridade
 
-            if (len(risco[0][1]) > 1):
-                if (risco[0][0][2]>1):
+            if (len(risco[0][1]) > 1): # tem mais de uma peça te ameaçando?
+                if (risco[0][0][2]>1): # A peça ameaçada não é um peão né?
                     print('corra para as montanhas!!!')
+                    x_ = risco[0][0][0]  # montando o parâmetro 'list' de return_pos_list
+                    y_ = risco[0][0][1]
+                    if (len(runaway([x_, y_], tab)) > 0):# Vai para runaway e devolve a casa que deve ir
+                        print('movimento...', (x_, y_), runaway([x_, y_], tab))
+                        mvp.jogada_cpu((x_, y_), runaway([x_, y_], tab), tab)
+                    else:
+                        print('já era essa peça, vamos pensar no ataque')
                 else:
                     print('abandonar o peão pra morrer, coitado')
+                    print(' vamos pensar no ataque...')
                 # vai para corra para as montanhas, esta aqui só pra teste
-                x_ = risco[0][0][0] #montando o parâmetro 'list' de return_pos_list
-                y_ = risco[0][0][1]
-                if (len(runaway([x_,y_],tab))>0):
-                    print('movimento...',(x_, y_), runaway([x_,y_],tab))
-                    mvp.jogada_cpu((x_, y_), runaway([x_,y_],tab), tab)
             else:
                 print('Da pra contra atacar?')
                 pos_enemy = (risco[0][1][0][0],risco[0][1][0][1])
                 aux_2 = check_risk(pos_enemy,cpu_pos)
-                if (len(aux_2)>0):
+                if (len(aux_2)>0): # sim, da pra contra atacar
+                    print('Sim, da pra contra atacar')
                     x_ = aux_2[1][0][0]
                     y_ = aux_2[1][0][1]
                     exit.append(((x_, y_),(aux_2[0])))
@@ -50,7 +54,19 @@ def main_ai(tab):
 #                    main.turn = 'B'
                     print('Jogada executada', exit)
                     break
-
+                else:
+                    print('não da pra contra atacar =(')
+                    if (risco[0][0][2] > 1):  # A peça ameaçada não é um peão né?
+                        print('da pra fugir?...', x[0], x[1])
+                        run = runaway([x[0], x[1]], tab)
+                        if (len(run) > 0):
+                            print('da sim...', run)
+                            mvp.jogada_cpu((x[0], x[1]), run, tab)
+                            break
+                        else:
+                            print('vish, não da pra fugir não... bora atacar')
+                    else:
+                        print('já era um peão, bora pensar no ataque')
 
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
     sub_list = []
@@ -123,7 +139,6 @@ def can_strike_back(peca,pos):
 
 def runaway(peca,tab):
     print('runway!!!')
-    resp = []
     x = peca[0]
     y = peca[1]
     cor = tab[y][x][0]
@@ -133,16 +148,16 @@ def runaway(peca,tab):
     list = return_pos_list(list, tab)  # uso a mesma variável list_ para pegar o resultado da função
     #faltou ver se este local é seguro
     pos_ok = []
-    for aux in list[0][0]:
-        if simula_jogada(tab,((x,y),aux)):
-            pos_ok.append(aux)
-    if len(pos_ok)> 0:
-        escolha = pos_ok[0]
-        for aux in pos_ok:
-            if tab[aux[1]][aux[0]][0] == 'B':
-                escolha = aux
-    else:
-        escolha = []
+    escolha = []
+    if len(list)>0: # a lista não esta zerada?
+        for aux in list[0][0]:
+            if simula_jogada(tab,((x,y),aux)):
+                pos_ok.append(aux)
+        if len(pos_ok)> 0:
+            escolha = pos_ok[0]
+            for aux in pos_ok:
+                if tab[aux[1]][aux[0]][0] == 'B':
+                    escolha = aux
 
     return escolha
 
