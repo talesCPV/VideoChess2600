@@ -184,3 +184,5 @@ def simula_jogada(tab,jogada):
                 resp = False
 
     return resp
+
+#new branch
