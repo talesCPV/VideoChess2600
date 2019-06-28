@@ -10,6 +10,7 @@ def main_ai(tab):
     cpu_pos = []
     plr_pos = []
     exit = []
+    ataque = False
     for y in range(8):
         for x in range(8):
             if tab[y][x][0] == cpu_color:
@@ -35,12 +36,16 @@ def main_ai(tab):
                     if (len(runaway([x_, y_], tab)) > 0):# Vai para runaway e devolve a casa que deve ir
                         print('movimento...', (x_, y_), runaway([x_, y_], tab))
                         mvp.jogada_cpu((x_, y_), runaway([x_, y_], tab), tab)
+                        ataque = False
+                        break
                     else:
                         print('já era essa peça, vamos pensar no ataque')
+                        ataque = True
                 else:
                     print('abandonar o peão pra morrer, coitado')
                     print(' vamos pensar no ataque...')
-                # vai para corra para as montanhas, esta aqui só pra teste
+                    ataque = True
+
             else:
                 print('Da pra contra atacar?')
                 pos_enemy = (risco[0][1][0][0],risco[0][1][0][1])
@@ -53,6 +58,7 @@ def main_ai(tab):
                     mvp.jogada_cpu((x_,y_),aux_2[0],tab)
 #                    main.turn = 'B'
                     print('Jogada executada', exit)
+                    ataque = False
                     break
                 else:
                     print('não da pra contra atacar =(')
@@ -62,11 +68,21 @@ def main_ai(tab):
                         if (len(run) > 0):
                             print('da sim...', run)
                             mvp.jogada_cpu((x[0], x[1]), run, tab)
+                            ataque = False
                             break
                         else:
                             print('vish, não da pra fugir não... bora atacar')
+                            ataque = True
+
                     else:
                         print('já era um peão, bora pensar no ataque')
+                        ataque = True
+        else:
+            print('Não existe risco, bora atacar!!!!')
+            ataque = True
+
+    if ataque:
+        strike(tab)
 
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
     sub_list = []
@@ -184,3 +200,6 @@ def simula_jogada(tab,jogada):
                 resp = False
 
     return resp
+
+def strike(tab):
+    print('Strike')

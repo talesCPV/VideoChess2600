@@ -36,3 +36,11 @@
 26/06
     alteração em runaway: verificação se 'list' não ficou zerada após 'return_pos_list'
     Acho que terminei a defesa, tem que testar bastante e depois programar o ataque
+
+
+28/06
+    Começo dos estudos de ataque:
+        1) achar a casa do rei adversário
+        2) varrer suas peças e ver quantas jogadas são necessárias até a posição de xeque no adversário
+         (PS: deixar o peão de fora desta etapa)
+        3) varrer suas peças e ver quantos movimentos serão necessários até proteger a sua peça que dará xeque no adversário
