@@ -94,7 +94,7 @@ def mouse_click(pos):
             click.remove(click[0])
     click.append(x)
     click.append(y)
-    if (tabuleiro[y][x][0] == turn): # se for a vez da cor selecionada, ver possibilidades
+    if not(tabuleiro[y][x][0] == ' '):# qualquer uma joga agora... #   turn): # se for a vez da cor selecionada, ver possibilidades
         possibilites(possible)
     else:
         while len(possible)>0: # zera o vetor possible

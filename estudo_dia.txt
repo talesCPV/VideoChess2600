@@ -44,3 +44,9 @@
         2) varrer suas peças e ver quantas jogadas são necessárias até a posição de xeque no adversário
          (PS: deixar o peão de fora desta etapa)
         3) varrer suas peças e ver quantos movimentos serão necessários até proteger a sua peça que dará xeque no adversário
+
+02/07
+    Mudança de estratégia no ataque:
+        1) Strike agora recebe além do tab, as jogadas possíveis da CPU
+        2) Varrendo as jogadas possíveis da CPU, analisar se alguma alcança uma peça branca
+        3) Se alvançar ele simula a jogada e vê se é seguro, se for executa.

@@ -78,11 +78,10 @@ def main_ai(tab):
                         print('já era um peão, bora pensar no ataque')
                         ataque = True
         else:
-            print('Não existe risco, bora atacar!!!!')
             ataque = True
 
     if ataque:
-        strike(tab)
+        strike(cpu_pos,tab)
 
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
     sub_list = []
@@ -198,8 +197,32 @@ def simula_jogada(tab,jogada):
         for y in x[0]:
             if (x2 == y[0] and y2 == y[1]):
                 resp = False
-
     return resp
 
-def strike(tab):
-    print('Strike')
+def strike(cpu_pos, tab):
+    print('Strike!!!',cpu_pos)
+    flag = True
+    jog = []
+    for x in cpu_pos:
+        for y in x[0]: # varre jogadas
+            if (tab[y[1]][y[0]][0] == 'B'): # # posso abater uma peça inimiga?
+                jog.append([(x[1],x[2]),y]) # adiciona jogada na lista
+
+    if len(jog)>0: # lista de jogadas de ataque é maior q 0?
+        for x in jog:
+            if (simula_jogada(tab,x)): # esta jogada é segura?
+                mvp.jogada_cpu(x[0],x[1], tab)
+                flag = False
+                break
+            else:
+                flag = True
+
+    if flag:
+        print('ataque')
+        for x in cpu_pos:
+            print(x)
+            for y in x[0]: # varre jogadas
+                if simula_jogada(tab,[(x[1],x[2]),y]):
+                    jog.append([(x[1], x[2]), y])
+        print(len(jog))
+
