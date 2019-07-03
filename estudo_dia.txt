@@ -49,4 +49,11 @@
     Mudança de estratégia no ataque:
         1) Strike agora recebe além do tab, as jogadas possíveis da CPU
         2) Varrendo as jogadas possíveis da CPU, analisar se alguma alcança uma peça branca
-        3) Se alvançar ele simula a jogada e vê se é seguro, se for executa.
+        3) Se alvançar ele simula a jogada e vê se é seguro, se for executa. (ataque seguro)
+
+03/07
+    Alterações de ataque:
+        1) Reposicionamento do ataque seguro para uma nova função (tirei os flags)
+        2) Se não existir nenhuma peça que possa ser abatida em segurança vamos pensar em uma jogada criativa
+        3) Separei as jogadas dos peões com as jogadas das demais peças.
+        4) Se as jogadas de peças forem poucas, vamos abrir os peões (usei um random nas jogadas dos peões)

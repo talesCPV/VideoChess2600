@@ -199,5 +199,5 @@ def jogada_cpu(pos1,pos2,tab):
 
     tab[y2][x2] = tab[y1][x1]
     tab[y1][x1] = (' ', ' ')
-    print(x1,y1,x2,y2)
+    print('jogada',x1,y1,' - ',x2,y2)
 

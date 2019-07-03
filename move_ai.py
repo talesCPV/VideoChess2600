@@ -1,6 +1,6 @@
 import move_pos as mvp
 import copy
-
+import random
 
 def main_ai(tab):
     cpu_color = 'P'
@@ -83,6 +83,8 @@ def main_ai(tab):
     if ataque:
         strike(cpu_pos,tab)
 
+    print('*****  Fim main  *****')
+
 def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posições alcançadas e por qual peça
     sub_list = []
     for pos in list:
@@ -145,13 +147,6 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
             list.remove(list[0])
     return list
 
-def can_strike_back(peca,pos):
-    x_ = peca[0]
-    y_ = peca[1]
-
-    for aux in pos:
-        print(aux)
-
 def runaway(peca,tab):
     print('runway!!!')
     x = peca[0]
@@ -199,9 +194,9 @@ def simula_jogada(tab,jogada):
                 resp = False
     return resp
 
-def strike(cpu_pos, tab):
-    print('Strike!!!',cpu_pos)
-    flag = True
+def ataque_seguro(cpu_pos, tab): #verifica se pode comer alguma peça adversária e se é seguro
+    print('ataque seguro!!!')
+    resp = True
     jog = []
     for x in cpu_pos:
         for y in x[0]: # varre jogadas
@@ -212,17 +207,30 @@ def strike(cpu_pos, tab):
         for x in jog:
             if (simula_jogada(tab,x)): # esta jogada é segura?
                 mvp.jogada_cpu(x[0],x[1], tab)
-                flag = False
+                resp = False
                 break
             else:
-                flag = True
+                resp = True
+    return resp
 
-    if flag:
+def strike(cpu_pos, tab):
+    print('Strike!!!')
+    if ataque_seguro(cpu_pos,tab): # verifica se posso comer alguma peça adversária, se sim faz a jogada e retorna false
         print('ataque')
+        peoes = []
+        pecas = []
         for x in cpu_pos:
-            print(x)
-            for y in x[0]: # varre jogadas
+            for y in x[0]: # varre jogadas (separa peças de peoes)
                 if simula_jogada(tab,[(x[1],x[2]),y]):
-                    jog.append([(x[1], x[2]), y])
-        print(len(jog))
+                    if x[4] == 'p':
+                        peoes.append([(x[1], x[2]), y])
+                    else:
+                        pecas.append([(x[1], x[2]), y])
+
+        if (len(pecas) <= 10 and len(peoes) > len(pecas)): # temos poucas opções de jogadas? vamos abrir os peoes
+            print('vamos de peão')
+            J = peoes[random.randint(0,len(peoes))] # sorteia uma jogada de peão qualquer
+            mvp.jogada_cpu(J[0],J[1], tab)
+        else:
+            print('vamos de peças')
 
