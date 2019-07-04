@@ -233,4 +233,12 @@ def strike(cpu_pos, tab):
             mvp.jogada_cpu(J[0],J[1], tab)
         else:
             print('vamos de peças')
+            max = 0
+            for index,x in enumerate(pecas):
+                print(x)
+                if x[1][0] > max:
+                    max = index
+                    print('max',x[1][0])
+            print(pecas[max])
+            mvp.jogada_cpu(pecas[max][0],pecas[max][1], tab)
 

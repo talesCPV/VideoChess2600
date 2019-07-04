@@ -85,16 +85,16 @@ def mouse_click(pos):
     if len(click)>0:
         xy = (click[0],click[1]) #guarda o valor anterior de click
         if mvp.jogada_plr(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
-            if turn == 'B':
-                turn = 'P'
-                mai.main_ai(tabuleiro)
-            else:
-                turn = 'B'
+#            if turn == 'B':
+#                turn = 'P'
+             mai.main_ai(tabuleiro)
+#            else:
+#                turn = 'B'
         while len(click)>0: # zera o vetor click
             click.remove(click[0])
     click.append(x)
     click.append(y)
-    if not(tabuleiro[y][x][0] == ' '):# qualquer uma joga agora... #   turn): # se for a vez da cor selecionada, ver possibilidades
+    if (tabuleiro[y][x][0] == 'B'):# qualquer uma joga agora... #   turn): # se for a vez da cor selecionada, ver possibilidades
         possibilites(possible)
     else:
         while len(possible)>0: # zera o vetor possible

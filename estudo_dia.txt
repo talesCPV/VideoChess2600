@@ -57,3 +57,8 @@
         2) Se não existir nenhuma peça que possa ser abatida em segurança vamos pensar em uma jogada criativa
         3) Separei as jogadas dos peões com as jogadas das demais peças.
         4) Se as jogadas de peças forem poucas, vamos abrir os peões (usei um random nas jogadas dos peões)
+04/07
+    Que comecem os jogos!!!
+        1) Alteração de jogada, agora só se pode mexer com as brancas e o computador sempre joga após a sua jogada
+        2) Após as jogadas dos peões, o computador começa a jogar com as peças
+        3) Análise de qual peça pode chegar mais longe e faz essa jogada
