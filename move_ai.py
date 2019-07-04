@@ -236,7 +236,7 @@ def strike(cpu_pos, tab):
             max = 0
             for index,x in enumerate(pecas):
                 print(x)
-                if x[1][0] > max:
+                if x[1][0] > pecas[max][1][0]:
                     max = index
                     print('max',x[1][0])
             print(pecas[max])
