@@ -3,6 +3,7 @@ import move_pos as mvp
 import move_ai as mai
 from pygame.locals import *
 import os
+import screen as screen
 
 ############ VARIÁVEIS ###########
 turn = 'B'
@@ -18,13 +19,13 @@ tabuleiro = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 
 click = [] # coordenadas x & y
 possible = []
 render = False
-pygame.init()
-screen = pygame.display.set_mode((540,540), 0, 32)
-background = pygame.image.load('board.png').convert()
-pieces = pygame.image.load('pieces.png').convert_alpha()
-icon = pygame.image.load(os.getcwd() + '\icon.png')
-pygame.display.set_icon(icon)
-pygame.display.set_caption('Video Chess 2600')
+#pygame.init()
+#screen = pygame.display.set_mode((540,540), 0, 32)
+#background = pygame.image.load('board.png').convert()
+#pieces = pygame.image.load('pieces.png').convert_alpha()
+#icon = pygame.image.load(os.getcwd() + '\icon.png')
+#pygame.display.set_icon(icon)
+#pygame.display.set_caption('Video Chess 2600')
 
 ######### FUNÇÕES ##########
 
@@ -130,12 +131,12 @@ while True:
             render = False
             mouse_click(pygame.mouse.get_pos())
 
-
     if not render:
-        pieces = pygame.transform.scale(pieces, (372, 124))
-        screen.fill([0, 100, 255])
-        screen.blit(background, (15, 15))
-        fill_board()
-        draw_square()
-        pygame.display.update()
+        screen.show(tabuleiro)
+#        pieces = pygame.transform.scale(pieces, (372, 124))
+#        screen.fill([0, 100, 255])
+#        screen.blit(background, (15, 15))
+#        fill_board()
+#        draw_square()
+#        pygame.display.update()
         render = True

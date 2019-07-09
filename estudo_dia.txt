@@ -64,3 +64,7 @@
         3) Análise de qual peça pode chegar mais longe e faz essa jogada
 08/07
     Adicionado Roque Branco e Preto
+
+09/07
+    Melhorar os módulos
+        1) Criar um módulo screen, onde se monta a tela e cria as possibilidades
