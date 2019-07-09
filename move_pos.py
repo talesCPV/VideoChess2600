@@ -174,6 +174,23 @@ def king_op(x,y,cor, tabuleiro):
                 if not(tabuleiro[y+1-o][x+1-i][0] == cor):
                     lista.append(((x+1-i),(y+1-o)))
 
+    if (tabuleiro[7][4][1] == 'K' and tabuleiro[7][4][0] == 'B'): #Roque Branco
+        if (tabuleiro[7][7][1] == 'R' and tabuleiro[7][7][0] == 'B'): # curto
+            if (tabuleiro[7][5][0] == ' ' and tabuleiro[7][6][0] == ' '):
+                lista.append((6,7))
+        if (tabuleiro[7][0][1] == 'R' and tabuleiro[7][0][0] == 'B'): # longo
+            if (tabuleiro[7][1][0] == ' ' and tabuleiro[7][2][0] == ' ' and tabuleiro[7][3][0] == ' '):
+                lista.append((1,7))
+
+    if (tabuleiro[0][4][1] == 'K' and tabuleiro[0][4][0] == 'P'): #Roque Preto
+        if (tabuleiro[0][7][1] == 'R' and tabuleiro[0][7][0] == 'P'): # curto
+            if (tabuleiro[0][5][0] == ' ' and tabuleiro[0][6][0] == ' '):
+                lista.append((6,0))
+        if (tabuleiro[0][0][1] == 'R' and tabuleiro[0][0][0] == 'P'): # longo
+            if (tabuleiro[0][1][0] == ' ' and tabuleiro[0][2][0] == ' ' and tabuleiro[0][3][0] == ' '):
+                lista.append((1,0))
+
+
     return lista
 
 def jogada_plr(pos1, pos2,possible, tab):
@@ -186,8 +203,20 @@ def jogada_plr(pos1, pos2,possible, tab):
         x_pos = pos[0]
         y_pos = pos[1]
         if (x2 == x_pos and y2 == y_pos):
+            print('move', pos1, pos2)
+            if (tab[y1][x1][1] == 'K' and max(x1,x2)- min(x1,x2) > 1): # roque
+                if tab[y2][x2 -1][1] == 'R':
+                    print('Roque longo!!!')
+                    tab[y2][x2 + 1] = (tab[y2][x2 -1][0],tab[y2][x2 -1][1])
+                    tab[y2][x2 - 1] = (' ',' ')
+                elif tab[y2][x2 +1][1] == 'R':
+                    print('Roque curto!!!')
+                    tab[y2][x2 - 1] = (tab[y2][x2 +1][0],tab[y2][x2 +1][1])
+                    tab[y2][x2 + 1] = (' ',' ')
+
             tab[y2][x2] = tab[y1][x1]
             tab[y1][x1] = (' ',' ')
+
             resp = True
     return resp
 

@@ -139,7 +139,6 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
         for sub in pos[0]:
 #            print('')
             if (casa[0] == sub[0] and casa[1] == sub[1]):
-                print(casa, pos)
                 list[1].append(([pos[1],pos[2],pos[4]]))
 
     if not(len(list[1])> 0):
@@ -236,9 +235,11 @@ def strike(cpu_pos, tab):
             max = 0
             for index,x in enumerate(pecas):
                 print(x)
-                if x[1][0] > pecas[max][1][0]:
+                if x[1][0] > pecas[max][1][1]:
                     max = index
                     print('max',x[1][0])
-            print(pecas[max])
-            mvp.jogada_cpu(pecas[max][0],pecas[max][1], tab)
-
+            if len(pecas)>0:
+                print(pecas[max])
+                mvp.jogada_cpu(pecas[max][0],pecas[max][1], tab)
+            else:
+                print('sem jogadas seguras...',len(pecas),len(peoes))
