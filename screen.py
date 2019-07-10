@@ -1,5 +1,4 @@
 import pygame
-from pygame.locals import *
 import os
 
 board = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 'B'), ('P', 'H'), ('P', 'R')],
@@ -11,6 +10,8 @@ board = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 'B')
        [('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p')],
        [('B', 'R'), ('B', 'H'), ('B', 'B'), ('B', 'Q'), ('B', 'K'), ('B', 'B'), ('B', 'H'), ('B', 'R')]]
 
+click = [] # coordenadas x & y
+possible = []
 pygame.init()
 screen = pygame.display.set_mode((740,540), 0, 32)
 background = pygame.image.load('board.png').convert()
@@ -25,7 +26,7 @@ def show(tab):
     screen.fill([0, 100, 255])
     screen.blit(background, (15, 15))
     fill_board(board)
-#    draw_square()
+    draw_square()
     pygame.display.update()
 
 def get_pieces(param): # recebe a cor e a peça e retorna a localização em pixels dentro de "pieces.png"
@@ -50,7 +51,6 @@ def get_pieces(param): # recebe a cor e a peça e retorna a localização em pix
         x += 310  # peão - pawn
     return (x, y)
 
-
 def write_border():
     font = pygame.font.SysFont("verdana", 14)
     color = (0, 0, 0)
@@ -73,6 +73,15 @@ def write_border():
     screen.blit(font.render("g", True, color),(424, 522))
     screen.blit(font.render("h", True, color),(488, 524))
 
+def draw_square(): # desenha os quadrados na tela
+    for pos in possible:# desenha os quadrados das possibilidades
+        x = pos[0]*64+15
+        y = pos[1]*64+15
+        pygame.draw.rect(screen, (0, 255, 0), [x,y] + [64, 64], 5)
+    if len(click)>0: # desenha o quadrado do click
+        x = click[0]*64+15
+        y = click[1]*64+15
+        pygame.draw.rect(screen, (255,0,0), [x,y]+[64, 64],5)
 
 def fill_board(tab): # enche o tabuleiro com as peças
     for x in range (8):

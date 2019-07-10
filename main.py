@@ -2,11 +2,10 @@ import pygame
 import move_pos as mvp
 import move_ai as mai
 from pygame.locals import *
-import os
 import screen as screen
 
 ############ VARIÁVEIS ###########
-turn = 'B'
+
 tabuleiro = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 'B'), ('P', 'H'), ('P', 'R')],
             [('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p')],
             [(' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' ')],
@@ -18,38 +17,10 @@ tabuleiro = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 
 
 click = [] # coordenadas x & y
 possible = []
-render = False
-#pygame.init()
-#screen = pygame.display.set_mode((540,540), 0, 32)
-#background = pygame.image.load('board.png').convert()
-#pieces = pygame.image.load('pieces.png').convert_alpha()
-#icon = pygame.image.load(os.getcwd() + '\icon.png')
-#pygame.display.set_icon(icon)
-#pygame.display.set_caption('Video Chess 2600')
+literal = ['','']
+render = True
 
 ######### FUNÇÕES ##########
-
-def get_pieces(param): # recebe a cor e a peça e retorna a localização em pixels dentro de "pieces.png"
-    x = 0
-    y = 0
-    color = param[0]
-    kind  = param[1]
-    if (color == 'P'): # cor preta? linha 2
-        y += 62
-
-    if   kind == 'R': # torre - Rook
-        x = 0
-    elif kind == 'H': # cavalo - Horse
-        x += 62
-    elif kind == 'B': # bispo - Bishop
-        x += 124
-    elif kind == 'Q': # dama - Queen
-        x += 186
-    elif kind == 'K': # rei - King
-        x += 248
-    else:
-        x += 310  # peão - pawn
-    return (x, y)
 
 def get_cord_pos(pos): #recebe a localização em pixels e retorna a coordenada da casa clicada
     pos0 = pos[0]
@@ -66,7 +37,6 @@ def get_cord_pos(pos): #recebe a localização em pixels e retorna a coordenada 
     x = (pos0 - 15) // 64
     y = (pos1 - 15) // 64
     return [x, y]
-
 
 
 def possibilites(pos): # checa as possibilidades de movimento de cada peça
@@ -86,11 +56,8 @@ def mouse_click(pos):
     if len(click)>0:
         xy = (click[0],click[1]) #guarda o valor anterior de click
         if mvp.jogada_plr(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
-#            if turn == 'B':
-#                turn = 'P'
              mai.main_ai(tabuleiro)
-#            else:
-#                turn = 'B'
+
         while len(click)>0: # zera o vetor click
             click.remove(click[0])
     click.append(x)
@@ -100,25 +67,8 @@ def mouse_click(pos):
     else:
         while len(possible)>0: # zera o vetor possible
             possible.remove(possible[0])
-
-def draw_square(): # desenha os quadrados na tela
-    for pos in possible:# desenha os quadrados das possibilidades
-        x = pos[0]*64+15
-        y = pos[1]*64+15
-        pygame.draw.rect(screen, (0, 255, 0), [x,y] + [64, 64], 5)
-    if len(click)>0: # desenha o quadrado do click
-        x = click[0]*64+15
-        y = click[1]*64+15
-        pygame.draw.rect(screen, (255,0,0), [x,y]+[64, 64],5)
-
-
-def fill_board(): # enche o tabuleiro com as peças
-    global render
-    for x in range (8):
-        for y in range (8):
-            if not(tabuleiro[y][x][1].strip() ==  ''):
-                xy =  [x*64+15, y*64+15] # monta x e y no screen (15 é o valor da borda e 64 o valor de cada casa em pixels)
-                screen.blit(pieces, xy, get_pieces(tabuleiro[y][x]) + (62, 62))
+    screen.click = click
+    screen.possible = possible
 
 while True:
 
@@ -128,15 +78,13 @@ while True:
             exit()
 
         if event.type == pygame.MOUSEBUTTONUP:
-            render = False
+            render = True
             mouse_click(pygame.mouse.get_pos())
+            literal[0] = literal[1]
+            literal[1] = (chr(97+ get_cord_pos(pygame.mouse.get_pos())[0]) + str(8 - get_cord_pos(pygame.mouse.get_pos())[1]))
+            print(literal)
 
-    if not render:
+
+    if render: # só renderiza a tela quando precisa
         screen.show(tabuleiro)
-#        pieces = pygame.transform.scale(pieces, (372, 124))
-#        screen.fill([0, 100, 255])
-#        screen.blit(background, (15, 15))
-#        fill_board()
-#        draw_square()
-#        pygame.display.update()
-        render = True
+        render = False

@@ -2,9 +2,10 @@ import move_pos as mvp
 import copy
 import random
 
+cpu_color = 'P'
+plr_color = 'B'
+
 def main_ai(tab):
-    cpu_color = 'P'
-    plr_color = 'B'
     cpu = []
     plr = []
     cpu_pos = []
@@ -137,7 +138,6 @@ def check_risk(casa,lista):# checa o risco de deternimada casa e retorna uma lis
     list = [casa,[]]
     for pos in lista:
         for sub in pos[0]:
-#            print('')
             if (casa[0] == sub[0] and casa[1] == sub[1]):
                 list[1].append(([pos[1],pos[2],pos[4]]))
 
@@ -215,7 +215,6 @@ def ataque_seguro(cpu_pos, tab): #verifica se pode comer alguma peça adversári
 def strike(cpu_pos, tab):
     print('Strike!!!')
     if ataque_seguro(cpu_pos,tab): # verifica se posso comer alguma peça adversária, se sim faz a jogada e retorna false
-        print('ataque')
         peoes = []
         pecas = []
         for x in cpu_pos:

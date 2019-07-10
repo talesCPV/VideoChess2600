@@ -68,3 +68,8 @@
 09/07
     Melhorar os módulos
         1) Criar um módulo screen, onde se monta a tela e cria as possibilidades
+
+10/07
+    Modulo Screen
+        1) módulo finalizado
+        2) são passados os vetores click e possible para o modulo screen, apenas repassando os valores
