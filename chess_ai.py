@@ -12,7 +12,7 @@ def lit_to_index(lit):
         x2 = ord(pos2[-2])-97
         y2 = 8-int(pos2[-1])
 
-        chess_move.move(pos2,tab)
+        chess_move.move(lit,tab)
         print(x2,y2)
 
 

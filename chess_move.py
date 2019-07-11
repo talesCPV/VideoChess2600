@@ -4,7 +4,7 @@
         call: move(lit, tabuleiro)
             where: lit
                         -> String
-                        -> position on board, ex: 'a2'
+                        -> position on board, ex: 'a2' or move, like BHc6, where B is color and H is piece
                    tabuleiro
                         -> matrix (8x8) of list with 2 Strings, first represent the color and second the piece
                         -> represent pieces on board, ex: [[('B','H'),('B','K'),...],
@@ -34,12 +34,23 @@ def move(lit,board):
 
     global tab
     tab = board
+    try:
+        x = ord(lit[-2])-97
+        y = 8-int(lit[-1])
 
-    x = ord(lit[0])-97
-    y = 8-int(lit[1])
-    color = tab[y][x][0]
-    piece = tab[y][x][1]
-
+        if (len(lit) == 2):
+            color = tab[y][x][0]
+            piece = tab[y][x][1]
+        else:
+            color = lit[0]
+            piece = lit[1]
+            print(color,piece)
+    except:
+        print('error!!!')
+        piece = ''
+        color = ''
+        x = 0
+        y = 0
     resp = []
 
     if piece == language[0][5]: # PEÃO
