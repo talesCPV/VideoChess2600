@@ -1,6 +1,7 @@
 import move_pos as mvp
 import copy
 import random
+import chess_move as chess_move
 
 cpu_color = 'P'
 plr_color = 'B'
@@ -93,7 +94,7 @@ def return_pos_list(list, tab): # recebe uma lista de peças e retorna as posiç
         y = pos[1]
         cor = pos[2][0]
         peca = pos[2][1]
-        aux = mvp.choose_op(x, y, cor, peca, tab)
+        aux = chess_move.move((chr(97+ x) + str(8 - y)),tab) #cria o literal e manda para chess_move
         if len(aux)>0:
             aux =  [aux]+ [x,y,cor,peca]
             sub_list += [aux]

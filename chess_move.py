@@ -1,17 +1,24 @@
 
-######## Possibilidades de movimento ###########
-
+'''
+    chess_move:
+        call: move(lit, tabuleiro)
+            where: lit
+                        -> String
+                        -> position on board, ex: 'a2'
+                   tabuleiro
+                        -> matrix (8x8) of list with 2 Strings, first represent the color and second the piece
+                        -> represent pieces on board, ex: [[('B','H'),('B','K'),...],
+                                                           [(' ',' '),('P','B'),...],
+                                                           ...]
+        return: list of possible moves, ex: ((x1,y1),(x2,y2),...)
+'''
 
 tab = []
-x = 0
-y = 0
-color = ''
-piece = ''
 
-def move(lit,tabuleiro):
+def move(lit,board):
 
     global tab
-    tab = tabuleiro
+    tab = board
 
     x = ord(lit[0])-97
     y = 8-int(lit[1])

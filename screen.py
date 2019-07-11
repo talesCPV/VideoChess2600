@@ -13,7 +13,7 @@ board = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 'B')
 click = [] # coordenadas x & y
 possible = []
 pygame.init()
-screen = pygame.display.set_mode((740,540), 0, 32)
+screen = pygame.display.set_mode((540,540), 0, 32)
 background = pygame.image.load('board.png').convert()
 pieces = pygame.image.load('pieces.png').convert_alpha()
 pieces = pygame.transform.scale(pieces, (372, 124)) # escala
@@ -90,13 +90,3 @@ def fill_board(tab): # enche o tabuleiro com as peças
                 xy =  [x*64+15, y*64+15] # monta x e y no screen (15 é o valor da borda e 64 o valor de cada casa em pixels)
                 screen.blit(pieces, xy, get_pieces(tab[y][x]) + (62, 62))
                 write_border()
-
-
-
-#while True:
-#    for event in pygame.event.get():
-#        if event.type == QUIT:
-#            pygame.quit()
-#            exit()
-
-#    show()
