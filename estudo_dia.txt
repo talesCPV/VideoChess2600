@@ -73,3 +73,8 @@
     Modulo Screen
         1) módulo finalizado
         2) são passados os vetores click e possible para o modulo screen, apenas repassando os valores
+
+    Modulo Chess_move
+        1) separei toda a parte que envolve possibilidades para um novo arquivo, agora basta passa o tabuleiro
+           e uma literal que vc recebe uma lista de opções de movimentos possíveis, com isso podemos enxugar
+           move_pos.py

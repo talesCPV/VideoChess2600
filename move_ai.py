@@ -227,7 +227,7 @@ def strike(cpu_pos, tab):
 
         if (len(pecas) <= 10 and len(peoes) > len(pecas)): # temos poucas opções de jogadas? vamos abrir os peoes
             print('vamos de peão')
-            J = peoes[random.randint(0,len(peoes))] # sorteia uma jogada de peão qualquer
+            J = peoes[random.randint(0,len(peoes)-1)] # sorteia uma jogada de peão qualquer
             mvp.jogada_cpu(J[0],J[1], tab)
         else:
             print('vamos de peças')
