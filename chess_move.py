@@ -11,9 +11,24 @@
                                                            [(' ',' '),('P','B'),...],
                                                            ...]
         return: list of possible moves, ex: ((x1,y1),(x2,y2),...)
+        IMPORTANT:
+            set language:
+                the variable language can be change by user, this var represents the first letter of each piece on tab and  which color is this
+                ex: language = [['R','H','B','Q','K'],['B','P']]
+                    [ # pieces
+                    -> R = roque
+                    -> H = horse
+                    -> B = bishop
+                    -> Q = queen
+                    -> K = king
+                    ],[ # colors
+                    -> B = branco
+                    -> P = preto
+                    ]
 '''
 
 tab = []
+language = [['R','H','B','Q','K','p'],['B','P']]
 
 def move(lit,board):
 
@@ -27,23 +42,23 @@ def move(lit,board):
 
     resp = []
 
-    if piece == 'p': # PEÃO
+    if piece == language[0][5]: # PEÃO
         resp += pawn_op(x,y,color)
 
-    elif piece == 'R': #TORRE
+    elif piece == language[0][0]: #TORRE
         resp += rook_op(x,y,color)
 
-    elif piece == 'H': # CAVALO
+    elif piece == language[0][1]: # CAVALO
         resp += horse_op(x,y,color)
 
-    elif piece == 'B': # BISPO
+    elif piece == language[0][2]: # BISPO
         resp += bishop_op(x,y,color)
 
-    elif piece == 'Q': #RAINHA
+    elif piece == language[0][3]: #RAINHA
         resp += rook_op(x,y,color)
         resp += bishop_op(x,y,color)
 
-    elif piece == 'K': #REI
+    elif piece == language[0][4]: #REI
         resp += king_op(x,y,color)
 
     print(resp)

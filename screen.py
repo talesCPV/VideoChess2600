@@ -1,18 +1,44 @@
+'''
+    screen:
+        call: show(tab)
+            where:
+               tab
+                -> matrix (8x8) of list with 2 Strings, first represent the color and second the piece
+                -> represent pieces on board, ex: [[('B','H'),('B','K'),...],
+                                                   [(' ',' '),('P','B'),...],
+                                                    ...]
+        return:
+            Screen with represent the tab in the board.
+
+        IMPORTANT:
+            The files 'board.png','pieces.png' and 'icon.png' must be in the same directory
+            where:
+                board.png (512x512) {64x64 each square}
+                pieces.png (792x264) {132x132 each piece} with alpha channel
+                icon.png (256x256) with alpha channel
+
+            set language:
+                the variable language can be change by user, this var represents the first letter of each piece on tab and  which color is this
+                ex: language = [['R','H','B','Q','K'],['B','P']]
+                    [ # pieces
+                    -> R = roque
+                    -> H = horse
+                    -> B = bishop
+                    -> Q = queen
+                    -> K = king
+                    ],[ # colors
+                    -> B = branco
+                    -> P = preto
+                    ]
+'''
+
 import pygame
 import os
-
-board = [[('P', 'R'), ('P', 'H'), ('P', 'B'), ('P', 'Q'), ('P', 'K'), ('P', 'B'), ('P', 'H'), ('P', 'R')],
-       [('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p'), ('P', 'p')],
-       [(' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' ')],
-       [(' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' ')],
-       [(' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' ')],
-       [(' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' '), (' ', ' ')],
-       [('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p'), ('B', 'p')],
-       [('B', 'R'), ('B', 'H'), ('B', 'B'), ('B', 'Q'), ('B', 'K'), ('B', 'B'), ('B', 'H'), ('B', 'R')]]
 
 click = [] # coordenadas x & y
 possible = []
 pygame.init()
+language = [['R','H','B','Q','K','p'],['B','P']]
 screen = pygame.display.set_mode((540,540), 0, 32)
 background = pygame.image.load('board.png').convert()
 pieces = pygame.image.load('pieces.png').convert_alpha()
@@ -22,10 +48,9 @@ pygame.display.set_icon(icon)
 pygame.display.set_caption('Video Chess 2600')
 
 def show(tab):
-    board =  tab
     screen.fill([0, 100, 255])
     screen.blit(background, (15, 15))
-    fill_board(board)
+    fill_board(tab)
     draw_square()
     pygame.display.update()
 
@@ -34,18 +59,20 @@ def get_pieces(param): # recebe a cor e a peça e retorna a localização em pix
     y = 0
     color = param[0]
     kind  = param[1]
-    if (color == 'P'): # cor preta? linha 2
+    if (color == language[1][0]): # cor preta? linha 2
+        y = 0
+    else:
         y += 62
 
-    if   kind == 'R': # torre - Rook
+    if   kind == language[0][0]: # torre - Rook
         x = 0
-    elif kind == 'H': # cavalo - Horse
+    elif kind == language[0][1]: # cavalo - Horse
         x += 62
-    elif kind == 'B': # bispo - Bishop
+    elif kind == language[0][2]: # bispo - Bishop
         x += 124
-    elif kind == 'Q': # dama - Queen
+    elif kind == language[0][3]: # dama - Queen
         x += 186
-    elif kind == 'K': # rei - King
+    elif kind == language[0][4]: # rei - King
         x += 248
     else:
         x += 310  # peão - pawn
