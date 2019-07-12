@@ -58,7 +58,6 @@ def main_ai(tab):
                     y_ = aux_2[1][0][1]
                     exit.append(((x_, y_),(aux_2[0])))
                     mvp.jogada_cpu((x_,y_),aux_2[0],tab)
-#                    main.turn = 'B'
                     print('Jogada executada', exit)
                     ataque = False
                     break
@@ -234,7 +233,7 @@ def strike(cpu_pos, tab):
             print('vamos de peças')
             max = 0
             for index,x in enumerate(pecas):
-                print(x)
+#                print(x)
                 if x[1][0] > pecas[max][1][1]:
                     max = index
                     print('max',x[1][0])

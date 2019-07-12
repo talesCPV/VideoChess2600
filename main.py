@@ -44,10 +44,17 @@ def mouse_click(pos):
     global possible
     x = get_cord_pos(pos)[0]
     y = get_cord_pos(pos)[1]
+    lit = chr(97+ x) + str(8 - y)
+    print(lit)
     if len(click)>0:
         xy = (click[0],click[1]) #guarda o valor anterior de click
-        if mvp.jogada_plr(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
-             mai.main_ai(tabuleiro)
+        peca = tabuleiro[click[1]][click[0]][1]
+        print('peça',peca)
+        for i in possible:
+            if (x == i[1] and y == i[0]):
+                print('movimento possível')
+#        if mvp.jogada_plr(xy,[x,y],possible,tabuleiro): # Se teve movimento, muda a vez do jogador
+#             mai.main_ai(tabuleiro)
 
         while len(click)>0: # zera o vetor click
             click.remove(click[0])
@@ -75,7 +82,7 @@ while True:
             literal[0] = literal[1]
             literal[1] = (chr(97+ get_cord_pos(pygame.mouse.get_pos())[0]) + str(8 - get_cord_pos(pygame.mouse.get_pos())[1]))
             mouse_click(pygame.mouse.get_pos())
-            chess_ai.get_move('BHa3',tabuleiro)
+#            chess_ai.get_move('BHc3',tabuleiro)
 
 
     if render: # só renderiza a tela quando precisa

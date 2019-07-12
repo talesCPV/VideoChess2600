@@ -10,7 +10,6 @@ def get_move(lit,board):
 
 
 def lit_to_index(lit): # convert literal from index to tab
-    print(lit)
     resp = []
     try:
         if lit[-2] == '-': # roque
@@ -26,15 +25,12 @@ def lit_to_index(lit): # convert literal from index to tab
                 piece = lit[1]
 
             list_parts = search_piece(color,piece)
-            print(list_parts)
             for x in list_parts:
                 lit_aux = (chr(97+ x[0]) + str(8 - x[1])) # transform in literal
-                print(lit_aux)
                 ind_aux = chess_move.move(lit_aux,tab)
                 for y in ind_aux:
                     if (x2 == y[0] and y2 == y[1] ):
-                        resp.append([x,(x1,y2)])
-                        print('resp =',x,(x2,y2))
+                        resp.append((x,(x2,y2)))
                         break
 
 
@@ -42,7 +38,11 @@ def lit_to_index(lit): # convert literal from index to tab
             print(x2,y2,color,piece)
     except:
         resp = []
-    print(resp)
+        print('error!!')
+    if len(resp) > 0:
+        print(resp)
+    else:
+        print('Movimento não permitido')
     return resp
 
 def search_piece(color, piece):
