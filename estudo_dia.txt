@@ -81,3 +81,5 @@
            
  11/07
     Modulo Chess_ai
+    Transformando jogadas literais em indices
+    Erro no Try resp.append

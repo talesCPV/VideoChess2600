@@ -37,14 +37,8 @@ def move(lit,board):
     try:
         x = ord(lit[-2])-97
         y = 8-int(lit[-1])
-
-        if (len(lit) == 2):
-            color = tab[y][x][0]
-            piece = tab[y][x][1]
-        else:
-            color = lit[0]
-            piece = lit[1]
-            print(color,piece)
+        color = tab[y][x][0]
+        piece = tab[y][x][1]
     except:
         print('error!!!')
         piece = ''
