@@ -2,53 +2,53 @@ import chess_move as chess_move
 
 tab = []
 language = [['R','H','B','Q','K','p'],['B','P']]
+index = []
+cpu_color = ''
+plr_color = ''
 
-def get_move(lit,board):
-    global tab
+def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Cavalo de b1 para casa a3
+    global tab, index
     tab = board
-    lit_to_index(lit)
+    index = lit_to_index(lit)
+    put_on_board(lit)
+    colors()
 
-
-def lit_to_index(lit): # convert literal from index to tab
-    resp = []
-    try:
-        if lit[-2] == '-': # roque
-            print('roque')
-        else:
-            pos2 = lit[-2:]
-            x2 = ord(pos2[-2])-97
-            y2 = 8-int(pos2[-1])
-            color = lit[0]
-            if len(lit) == 3:
-                piece = 'p'
-            else:
-                piece = lit[1]
-
-            list_parts = search_piece(color,piece)
-            for x in list_parts:
-                lit_aux = (chr(97+ x[0]) + str(8 - x[1])) # transform in literal
-                ind_aux = chess_move.move(lit_aux,tab)
-                for y in ind_aux:
-                    if (x2 == y[0] and y2 == y[1] ):
-                        resp.append((x,(x2,y2)))
-                        break
-
-
-            chess_move.move(lit,tab)
-            print(x2,y2,color,piece)
-    except:
-        resp = []
-        print('error!!')
-    if len(resp) > 0:
-        print(resp)
-    else:
-        print('Movimento não permitido')
-    return resp
-
-def search_piece(color, piece):
-    resp = []
+def colors(): # define as cores do jogador e da CPU
+    global cpu_color, plr_color
+    plr_color = tab[index[1][1]][index[1][0]][0]
     for y in range(8):
         for x in range(8):
-            if (tab[y][x][0] == color and tab[y][x][1] == piece):
-                resp.append([x,y])
+            if not(tab[y][x][0] == ' ') and not(tab[y][x][0] == plr_color):
+                cpu_color = tab[y][x][0]
+                break
+
+
+def put_on_board(lit): # recebe os índices de tabuleiro e efetua a jogada
+    moves = chess_move.move(lit[0],tab)
+#    index = lit_to_index(lit)
+    try:
+        x1 = index[0][0]
+        y1 = index[0][1]
+        x2 = index[1][0]
+        y2 = index[1][1]
+        for i in moves:
+            if i == (x2,y2):
+                tab[y2][x2] = tab[y1][x1]
+                tab[y1][x1] = (' ', ' ')
+                print('->',x1,y1,' - ',x2,y2)
+    except:
+        print('jogada impossível')
+
+def lit_to_index(lit): # converte notação algébrica longa para índices de tabuleiro, ex: ('b1','a3') -> ((1,7),(0,5))
+    try:
+        x0 = ord(lit[0][-2]) - 97
+        y0 = 8 - int(lit[0][-1])  # transformo o literal destino em índice
+        x1 = ord(lit[1][-2]) - 97
+        y1 = 8 - int(lit[1][-1])  # transformo o literal destino em índice
+
+        resp = ((x0,y0),(x1,y1))
+    except:
+        resp = []
+
     return resp
+

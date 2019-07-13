@@ -83,3 +83,10 @@
     Modulo Chess_ai
     Transformando jogadas literais em indices
     Erro no Try resp.append
+
+ 13/07
+    Isolei o módulo Move_ai, direcionando para o Chess_ai
+    Chess_ai.move recebe lista de notação algébrica longa, ex: ('b1','a3') -> Cavalo de b1 para casa a3
+    Chess_ai.lit_to_index(lit): # converte notação algébrica longa para índices de tabuleiro, ex: ('b1','a3') -> ((1,7),(0,5))
+    Chess_ai.put_on_board(pos): # recebe os índices de tabuleiro e efetua a jogada
+    Chess_ai.colors(): # Define as cores da CPU e do jogador

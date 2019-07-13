@@ -66,7 +66,6 @@ def move(lit,board):
     elif piece == language[0][4]: #REI
         resp += king_op(x,y,color)
 
-#    print(resp)
     return resp
 
 def horse_op(x,y,color):

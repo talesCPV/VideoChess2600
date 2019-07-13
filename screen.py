@@ -48,7 +48,7 @@ pygame.display.set_icon(icon)
 pygame.display.set_caption('Video Chess 2600')
 
 def show(tab):
-    screen.fill([0, 100, 255])
+    screen.fill([0, 0, 0])
     screen.blit(background, (15, 15))
     fill_board(tab)
     draw_square()
@@ -80,7 +80,7 @@ def get_pieces(param): # recebe a cor e a peça e retorna a localização em pix
 
 def write_border():
     font = pygame.font.SysFont("verdana", 14)
-    color = (0, 0, 0)
+    color = (255, 255, 255)
 
     screen.blit(font.render("1", True, color),(3, 485))
     screen.blit(font.render("2", True, color),(3, 421))
