@@ -90,3 +90,16 @@
     Chess_ai.lit_to_index(lit): # converte notação algébrica longa para índices de tabuleiro, ex: ('b1','a3') -> ((1,7),(0,5))
     Chess_ai.put_on_board(pos): # recebe os índices de tabuleiro e efetua a jogada
     Chess_ai.colors(): # Define as cores da CPU e do jogador
+
+14/07
+    Novo estudo do Engine:
+    1) Chess_ai recebe o tabuleiro e o último lance do jogador a ser efetuado
+    2) Verifica se o lance é possível, se for efetua o lance do adversário no tabuleiro
+    3) Adiquire as variáveis cpu_color, plr_color, cpu_pos, plr_pos, cpu_reach, plr_reach, cpu_risk, plr_risk
+    4) A partir de agora começa a análise de jogada, para cada jogador ja temos: as cores, a posição das peças, cada casa alcançada e por qual peça e cada peça em risco por qual
+    5) Verificar em qual fase do jogo estamos (abertura, meio jogo ou final)
+        Abertura: A abertura contem 3 etapas:
+        1- Desenvolver as peças (fazer com que cada peça tenha saído para o jogo[cavalos,bispos e por fim dama])
+        2- Fazer o roque e proteger o Rei
+        3- Conectar as torres
+        OBS: Fazer isso mexendo ao mínimo os peões
