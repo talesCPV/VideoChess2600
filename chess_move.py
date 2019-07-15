@@ -4,7 +4,7 @@
         call: move(lit, tabuleiro)
             where: lit
                         -> String
-                        -> position on board, ex: 'a2' or move, like BHc6, where B is color and H is piece
+                        -> position on board, ex: 'a2'
                    tabuleiro
                         -> matrix (8x8) of list with 2 Strings, first represent the color and second the piece
                         -> represent pieces on board, ex: [[('B','H'),('B','K'),...],
@@ -29,6 +29,13 @@
 
 tab = []
 language = [['R','H','B','Q','K','p'],['B','P']]
+
+def move_by_index(index,board): # receive index and call move
+    try:
+        lit = chr(97 + index[0]) + str(8 - index[1])
+        return move(lit,board)
+    except:
+        return []
 
 def move(lit,board):
 

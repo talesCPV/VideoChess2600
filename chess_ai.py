@@ -22,12 +22,12 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
         check_game_stage()
         defense()
 
-'''    
-    print('Colors:',cpu_color,plr_color)
-    print('Positions:',cpu_pos,plr_pos)
-    print('Reachs:',cpu_reach,plr_reach)
-    print('Risk:',cpu_risk,plr_risk)
-'''
+
+#    print('Colors:',cpu_color,plr_color)
+#    print('Positions:',cpu_pos,plr_pos)
+#    print('Reachs:',cpu_reach,plr_reach)
+#    print('Risk:',cpu_risk,plr_risk)
+
 
 def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
     index = lit_to_index(lit)
@@ -202,22 +202,33 @@ def defense():
     if len(cpu_risk)>0:
         resp = True
         if cpu_risk[0][0][2] == language[0][4]: # O computador esta em cheque?
-            scape_check()
+            check_scape()
         else:
             print('Não estamos em cheque, mas temos peças ameaçadas')
-        for x in cpu_risk:
-            print(x)
+#        for x in cpu_risk:
+#            print(x)
     else:
         resp = False
 
     return resp
 
-def scape_check(): # Como vamos sair de um cheque?
+def check_scape(): # Como vamos sair de um cheque?
     print('Cheque!!!')
     threat = []
+    king_move = []
     for x in cpu_risk:
         if x[0][2] == language[0][4]: # Quem são as ameaças?
+            king_move = (chess_move.move_by_index((x[0][0],x[0][1]),tab))
             threat.append(x[1])
-    print(threat)
+
+    for x in king_move:
+        for y in plr_reach:
+            for i in y[0]:
+                if (x == i):
+                    king_move.remove(x)
+
+    #    if len(threat)>1: # Existe mais de uma ameaça? Se sim, vamos fugir.
+
+    print('king move',king_move)
 #    for i in plr_risk:
 #        print(i)
