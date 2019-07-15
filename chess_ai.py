@@ -20,6 +20,7 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
         reachs()
         check_risk()
         check_game_stage()
+        defense()
 
 '''    
     print('Colors:',cpu_color,plr_color)
@@ -123,6 +124,8 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
                     _x = plr[0]
                     _y = plr[1]
                     plr_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
+    if len(plr_risk)>0:
+        plr_risk = risk_order(plr_risk)
 
     for plr in plr_reach:
         for cpu in cpu_pos:
@@ -133,6 +136,27 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
                     _x = cpu[0]
                     _y = cpu[1]
                     cpu_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
+    if len(cpu_risk)>0:
+        cpu_risk = risk_order(cpu_risk)
+
+def risk_order(risk): # organiza o risco por ordem de peças ameaçadas (Rei, Dama, Cavalo, Bispo, Torre, Peão
+    resp = []
+    for i in range(6):
+        for x in risk:
+            if (i == 0 and x[0][2] == language[0][4]):
+                resp.append(x)
+            if (i == 1 and x[0][2] == language[0][3]):
+                resp.append(x)
+            if (i == 2 and x[0][2] == language[0][1]):
+                resp.append(x)
+            if (i == 3 and x[0][2] == language[0][2]):
+                resp.append(x)
+            if (i == 4 and x[0][2] == language[0][0]):
+                resp.append(x)
+            if (i == 5 and x[0][2] == language[0][5]):
+                resp.append(x)
+
+    return resp
 
 def check_game_stage():
     global game_stage
@@ -155,7 +179,7 @@ def check_game_stage():
                 roque.append((x,base_line))
 
         if len(roque) > 1: # achou 2 torres
-            print(roque)
+            #print(roque)
             roq_1 = chr(97+ roque[0][0]) + str(8 - roque[0][1])
             roq_2 = chr(97+ roque[1][0]) + str(8 - roque[1][1])
             roq_1 = chess_move.move(roq_1 ,tab)
@@ -172,4 +196,28 @@ def check_game_stage():
         else:
             game_stage = 2
 
-    print(game_stage)
+    #print(game_stage)
+
+def defense():
+    if len(cpu_risk)>0:
+        resp = True
+        if cpu_risk[0][0][2] == language[0][4]: # O computador esta em cheque?
+            scape_check()
+        else:
+            print('Não estamos em cheque, mas temos peças ameaçadas')
+        for x in cpu_risk:
+            print(x)
+    else:
+        resp = False
+
+    return resp
+
+def scape_check(): # Como vamos sair de um cheque?
+    print('Cheque!!!')
+    threat = []
+    for x in cpu_risk:
+        if x[0][2] == language[0][4]: # Quem são as ameaças?
+            threat.append(x[1])
+    print(threat)
+#    for i in plr_risk:
+#        print(i)
