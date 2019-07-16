@@ -1,4 +1,5 @@
 import chess_move as chess_move
+import copy
 
 tab = []
 language = [['R','H','B','Q','K','p'],['B','P']] #
@@ -247,12 +248,37 @@ def check_scape(): # Como vamos sair de um cheque?
                         return resp
                     else:
                         if len(king_move)>0:
-                            print('fuja para',king_move)
+                            for move in king_move:
+                                if simulate((king_pos,move)):
+                                    lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
+                                    lit2 = chr(97 + move[0]) + str(8 - move[1])
+                                    resp = (lit1,lit2)
+                                    put_on_board(resp)
+                                else:
+                                    print('morreu')
                         else:
                             print('morri')
 
     return resp
 
-#    print('king move',king_move)
-#    for i in plr_risk:
-#        print(i)
+def simulate(index):
+    new_tab = copy.deepcopy(tab)
+    new_plr_reach = []
+    resp = True
+    x1 = index[0][0]
+    y1 = index[0][1]
+    x2 = index[1][0]
+    y2 = index[1][1]
+    new_tab[y2][x2] = new_tab[y1][x1]
+    new_tab[y1][x1] = (' ',' ')
+    for y in range(8):
+        for x in range(8):
+            new_plr_reach.append(chess_move.move_by_index((x,y),new_tab))
+
+
+    for x in new_plr_reach:
+        for i in x:
+            if i == (x2,y2):
+                resp = False
+
+    return  resp

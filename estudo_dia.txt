@@ -109,3 +109,6 @@
     Ordenada a lista cpu_risk por ordem de prioridade (Rei no topo da lista, depois dama...)
     Desenvolvimento da função check_scape, chamada quando a cpu esta em cheque.
 
+16/07
+    check_scape concluído
+    Criado o simulate, onde vc simula uma jogada e ele retorna True se for segura e false se não for
