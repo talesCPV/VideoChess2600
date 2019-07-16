@@ -103,3 +103,9 @@
         2- Fazer o roque e proteger o Rei
         3- Conectar as torres
         OBS: Fazer isso mexendo ao mínimo os peões
+
+15/07
+    Tabuleiro desenhado dinamicamente (não precisa mais do board.png)
+    Ordenada a lista cpu_risk por ordem de prioridade (Rei no topo da lista, depois dama...)
+    Desenvolvimento da função check_scape, chamada quando a cpu esta em cheque.
+

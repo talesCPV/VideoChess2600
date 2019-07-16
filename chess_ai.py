@@ -201,8 +201,8 @@ def check_game_stage():
 def defense():
     if len(cpu_risk)>0:
         resp = True
-        if cpu_risk[0][0][2] == language[0][4]: # O computador esta em cheque?
-            check_scape()
+        if cpu_risk[0][0][2] == language[0][4]: # A CPU esta em cheque?
+            print('check scape ->',check_scape())
         else:
             print('Não estamos em cheque, mas temos peças ameaçadas')
 #        for x in cpu_risk:
@@ -215,20 +215,44 @@ def defense():
 def check_scape(): # Como vamos sair de um cheque?
     print('Cheque!!!')
     threat = []
-    king_move = []
-    for x in cpu_risk:
-        if x[0][2] == language[0][4]: # Quem são as ameaças?
-            king_move = (chess_move.move_by_index((x[0][0],x[0][1]),tab))
-            threat.append(x[1])
+    resp = []
+    king_pos = (cpu_risk[0][0][0],cpu_risk[0][0][1])
+    king_move = chess_move.move_by_index(king_pos,tab)
 
-    for x in king_move:
+    for x in king_move: # opções de movimento do rei, descartadas as casas ameaçadas
         for y in plr_reach:
             for i in y[0]:
                 if (x == i):
                     king_move.remove(x)
 
-    #    if len(threat)>1: # Existe mais de uma ameaça? Se sim, vamos fugir.
+    for x in cpu_risk: # Quem são as ameaças?
+        if x[0][2] == language[0][4]:
+            threat.append(x[1])
 
-    print('king move',king_move)
+    if len(threat)>1: # Existe mais de uma ameaça?
+        if len(king_move) == 0: # Não temos casa pra fugir -> Cheque Matte
+            print('Cheque matte')
+            return []
+        else:
+            print('Fuga do rei')
+    else:
+        for x in cpu_reach:
+            for y in x[0]:
+                if(y == (threat[0][0],threat[0][1])): # consigo matar a ameaça?
+                    x1 = ord(x[1][-2]) - 97
+                    y1 = 8 - int(x[1][-1])
+                    if not((x1,y1) == king_pos):
+                        resp = (x[1],chr(97+ y[0]) + str(8 - y[1]))
+                        put_on_board(resp)
+                        return resp
+                    else:
+                        if len(king_move)>0:
+                            print('fuja para',king_move)
+                        else:
+                            print('morri')
+
+    return resp
+
+#    print('king move',king_move)
 #    for i in plr_risk:
 #        print(i)

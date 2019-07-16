@@ -11,9 +11,8 @@
             Screen with represent the tab in the board.
 
         IMPORTANT:
-            The files 'board.png','pieces.png' and 'icon.png' must be in the same directory
+            The files 'pieces.png' and 'icon.png' must be in the same directory
             where:
-                board.png (512x512) {64x64 each square}
                 pieces.png (792x264) {132x132 each piece} with alpha channel
                 icon.png (256x256) with alpha channel
 
@@ -27,8 +26,8 @@
                     -> Q = queen
                     -> K = king
                     ],[ # colors
-                    -> B = branco
-                    -> P = preto
+                    -> B = white
+                    -> P = dark
                     ]
 '''
 
@@ -40,7 +39,6 @@ possible = []
 pygame.init()
 language = [['R','H','B','Q','K','p'],['B','P']]
 screen = pygame.display.set_mode((540,540), 0, 32)
-background = pygame.image.load('board.png').convert()
 pieces = pygame.image.load('pieces.png').convert_alpha()
 pieces = pygame.transform.scale(pieces, (372, 124)) # escala
 icon = pygame.image.load(os.getcwd() + '\icon.png')
@@ -49,10 +47,25 @@ pygame.display.set_caption('Video Chess 2600')
 
 def show(tab):
     screen.fill([0, 0, 0])
-    screen.blit(background, (15, 15))
+    draw_board()
     fill_board(tab)
     draw_square()
     pygame.display.update()
+
+def draw_board(): # Desenha o tabuleiro na tela
+    color = True
+    dark = (185,122,87)
+    white = (255,255,255)
+    for y in range(8):
+        color = not color
+        for x in range(8):
+            if color:
+                pygame.draw.rect(screen, dark, [15+(64*x),15+(64*y)] + [64, 64], 0)
+                color = False
+            else:
+                pygame.draw.rect(screen, white, [15+(64*x),15+(64*y)] + [64, 64], 0)
+                color = True
+
 
 def get_pieces(param): # recebe a cor e a peça e retorna a localização em pixels dentro de "pieces.png"
     x = 0
