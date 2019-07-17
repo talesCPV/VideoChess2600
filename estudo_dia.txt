@@ -113,3 +113,8 @@
     check_scape concluído (verificado e reverificado...)
     Criado o simulate, onde vc simula uma jogada e ele retorna True se for segura e false se não for
     fix bug - chess_move -> roque branco e roque preto
+
+17/07
+    check_scape mais uma vez atualizado - Fix bugs e simplificação de algorítimo
+        - ainda falta um caso: quando o rei esta em cheque mas posso colocar uma peça o protegendo
+    início da função strike_back

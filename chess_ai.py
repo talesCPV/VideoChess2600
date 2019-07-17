@@ -205,41 +205,39 @@ def defense():
         if cpu_risk[0][0][2] == language[0][4]: # A CPU esta em cheque?
             print('check scape ->',check_scape())
         else:
-            print('Não estamos em cheque, mas temos peças ameaçadas')
-#        for x in cpu_risk:
-#            print(x)
+            print('peças ameaçadas', strike_back())
+
     else:
         resp = False
+
+    return resp
+
+def strike_back():
+    resp = []
+    for in_risk in cpu_risk:
+        print('em risco ->', in_risk)
 
     return resp
 
 def check_scape(): # Como vamos sair de um cheque?
     print('Cheque!!!')
     threat = []
-    resp = []
     king_pos = (cpu_risk[0][0][0],cpu_risk[0][0][1])
     king_move = chess_move.move_by_index(king_pos,tab)
 
-    for x in king_move: # opções de movimento do rei, descartadas as casas ameaçadas
-        print('x',x)
-        if not simulate((king_pos,x)):
-            king_move.remove(x)
-
-    print('King ->',king_pos,king_move)
+    i = 0
+    while i < len(king_move): # opções de movimento do rei, descartadas as casas ameaçadas
+        if not safe_move((king_pos,king_move[i])):
+            king_move.remove(king_move[i])
+        else:
+            i += 1
 
     for x in cpu_risk: # Quem são as ameaças?
         if x[0][2] == language[0][4]:
             threat.append(x[1])
 
-    if len(threat)>1: # Existe mais de uma ameaça?
-        if len(king_move) == 0: # Não temos casa pra fugir -> Cheque Matte
-            print('Cheque matte')
-            return []
-        else:
-            print('Fuga do rei')
-            print(king_pos,king_move)
-
-    else:
+    if len(threat) == 1: # Existe apenas uma ameaça?
+        block = []
         for x in cpu_reach:
             for y in x[0]:
                 if(y == (threat[0][0],threat[0][1])): # consigo matar a ameaça?
@@ -251,22 +249,17 @@ def check_scape(): # Como vamos sair de um cheque?
                         return resp
                     else:
                         if len(king_move)>0:
-                            print('fuga', king_move) # fuga
-                            for run in king_move:
-                                if simulate((king_pos, run)): #Posso comer esta peça?
-                                    lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
-                                    lit2 = chr(97 + run[0]) + str(8 - run[1])
-                                    resp = (lit1,lit2)
-                                    if not put_on_board(resp):
-                                        resp = []
-                                else:
-                                    print('morri tbm')
-                        else:
-                            print('morri')
+                            return runaway(king_pos,king_move)
+                else:
+                    x1 = ord(x[1][-2]) - 97
+                    y1 = 8 - int(x[1][-1])
+                    print('consigo proteger o rei?',(x1,y1),y)
+                    print(still_in_check(((x1,y1),y)))
 
-    return resp
 
-def simulate(index):
+    return runaway(king_pos, king_move)
+
+def safe_move(index):
     new_tab = copy.deepcopy(tab)
     new_plr_reach = []
     resp = True
@@ -282,10 +275,65 @@ def simulate(index):
             if len(reach)>0:
                 new_plr_reach.append(reach)
 
-
     for x in new_plr_reach:
         for i in x:
             if i == (x2,y2):
                 resp = False
 
     return  resp
+
+def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
+    resp = []
+    if len(options) > 0:
+        exit = [options[0], ' ']
+        for x in options:  # escolhe a melhor saída da lista, se for pra comer uma peça adversária
+            if not exit[1] == language[0][4]:  # K
+                if (tab[x[1]][x[0]][1] == language[0][4]):
+                    exit = [x, language[0][4]]
+                elif not exit[1] == language[0][3]:  # Q
+                    if (tab[x[1]][x[0]][1] == language[0][3]):
+                        exit = [x, language[0][3]]
+                    elif not exit[1] == language[0][1]:  # H
+                        if (tab[x[1]][x[0]][1] == language[0][1]):
+                            exit = [x, language[0][1]]
+                        elif not exit[1] == language[0][2]:  # B
+                            if (tab[x[1]][x[0]][1] == language[0][2]):
+                                exit = [x, language[0][2]]
+                            elif not exit[1] == language[0][0]:  # R
+                                if (tab[x[1]][x[0]][1] == language[0][0]):
+                                    exit = [x, language[0][0]]
+                                elif not exit[1] == language[0][5]:  # p
+                                    if (tab[x[1]][x[0]][1] == language[0][5]):
+                                        exit = [x, language[0][5]]
+
+        if safe_move((piece, exit[0])):  # Posição segura?
+            lit1 = chr(97 + piece[0]) + str(8 - piece[1])
+            lit2 = chr(97 + exit[0][0]) + str(8 - exit[0][1])
+            resp = (lit1, lit2)
+            if not put_on_board(resp):
+                resp = []
+
+    return resp
+
+def still_in_check(index):
+    new_tab = copy.deepcopy(tab)
+    new_plr_reach = []
+    resp = True
+    x1 = index[0][0]
+    y1 = index[0][1]
+    x2 = index[1][0]
+    y2 = index[1][1]
+    new_tab[y2][x2] = new_tab[y1][x1]
+    new_tab[y1][x1] = (' ', ' ')
+    for y in range(8):
+        for x in range(8):
+            reach = chess_move.move_by_index((x, y), new_tab)
+            if len(reach) > 0:
+                new_plr_reach.append(reach)
+
+    for x in new_plr_reach:
+        for i in x:
+            if i == (x2, y2):
+                resp = False
+
+    return resp
