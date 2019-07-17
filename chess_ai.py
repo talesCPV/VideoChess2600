@@ -219,11 +219,13 @@ def check_scape(): # Como vamos sair de um cheque?
     resp = []
     king_pos = (cpu_risk[0][0][0],cpu_risk[0][0][1])
     king_move = chess_move.move_by_index(king_pos,tab)
-    print('entrou king move',king_pos,king_move)
 
     for x in king_move: # opções de movimento do rei, descartadas as casas ameaçadas
+        print('x',x)
         if not simulate((king_pos,x)):
             king_move.remove(x)
+
+    print('King ->',king_pos,king_move)
 
     for x in cpu_risk: # Quem são as ameaças?
         if x[0][2] == language[0][4]:
@@ -250,14 +252,15 @@ def check_scape(): # Como vamos sair de um cheque?
                     else:
                         if len(king_move)>0:
                             print('fuga', king_move) # fuga
-                            if simulate((king_pos, king_move[0])): #Posso comer esta peça?
-                                lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
-                                lit2 = chr(97 + king_move[0][0]) + str(8 - king_move[0][1])
-                                resp = (lit1,lit2)
-                                if not put_on_board(resp):
-                                    resp = []
-                            else:
-                                print('morri tbm')
+                            for run in king_move:
+                                if simulate((king_pos, run)): #Posso comer esta peça?
+                                    lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
+                                    lit2 = chr(97 + run[0]) + str(8 - run[1])
+                                    resp = (lit1,lit2)
+                                    if not put_on_board(resp):
+                                        resp = []
+                                else:
+                                    print('morri tbm')
                         else:
                             print('morri')
 
