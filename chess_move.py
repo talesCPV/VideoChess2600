@@ -103,10 +103,10 @@ def horse_op(x,y,color):
 def bishop_op(x,y,color):
     lista = []
 
-    if color == 'P':
-        enemy_color = 'B'
+    if color == language[1][1]:
+        enemy_color = language[1][0]
     else:
-        enemy_color = 'P'
+        enemy_color = language[1][1]
 
     i = 1
     while (x + i < 8 and y + i < 8):  # enquanto x não chega a estremidade direita e superior
@@ -149,10 +149,10 @@ def bishop_op(x,y,color):
 def rook_op(x,y,color):
     list = []
 
-    if color == 'P':
-        enemy_color = 'B'
+    if color == language[1][1]:
+        enemy_color = language[1][0]
     else:
-        enemy_color = 'P'
+        enemy_color = language[1][1]
 
     i = 1
     while (x + i < 8):  # enquanto x não chega a estremidade direita
@@ -196,12 +196,13 @@ def rook_op(x,y,color):
 
 def pawn_op(x,y,color):
     list = []
-    if color == 'P':
+    if color == language[1][1]:
         upside = -1
-        enemy_color = 'B'
+        enemy_color = language[1][0]
     else:
         upside = 1
-        enemy_color = 'P'
+        enemy_color = language[1][1]
+
     if (y - upside >= 0 and y - upside <= 7):
         if (tab[y - upside][x][0] == ' '):  # há algo na frente do peão?
             list.append((x, (y - upside)))
@@ -224,20 +225,22 @@ def king_op(x,y,color):
                 if not(tab[y+1-o][x+1-i][0] == color):
                     list.append(((x+1-i),(y+1-o)))
 
-    if (tab[7][4][1] == 'K' and tab[7][4][0] == 'B'): #Roque Branco
-        if (tab[7][7][1] == 'R' and tab[7][7][0] == 'B'): # curto
-            if (tab[7][5][0] == ' ' and tab[7][6][0] == ' '):
-                list.append((6,7))
-        if (tab[7][0][1] == 'R' and tab[7][0][0] == 'B'): # longo
-            if (tab[7][1][0] == ' ' and tab[7][2][0] == ' ' and tab[7][3][0] == ' '):
-                list.append((1,7))
+    if color == language[1][0]: #Roque Branco
+        if (tab[7][4][1] == 'K' and tab[7][4][0] == language[1][0]):
+            if (tab[7][7][1] == 'R' and tab[7][7][0] == language[1][0]): # curto
+                if (tab[7][5][0] == ' ' and tab[7][6][0] == ' '):
+                    list.append((6,7))
+            if (tab[7][0][1] == 'R' and tab[7][0][0] == language[1][0]): # longo
+                if (tab[7][1][0] == ' ' and tab[7][2][0] == ' ' and tab[7][3][0] == ' '):
+                    list.append((1,7))
 
-    if (tab[0][4][1] == 'K' and tab[0][4][0] == 'P'): #Roque Preto
-        if (tab[0][7][1] == 'R' and tab[0][7][0] == 'P'): # curto
-            if (tab[0][5][0] == ' ' and tab[0][6][0] == ' '):
-                list.append((6,0))
-        if (tab[0][0][1] == 'R' and tab[0][0][0] == 'P'): # longo
-            if (tab[0][1][0] == ' ' and tab[0][2][0] == ' ' and tab[0][3][0] == ' '):
-                list.append((1,0))
+    if color == language[1][1]: #Roque Preto
+        if (tab[0][4][1] == 'K' and tab[0][4][0] == language[1][1]):
+            if (tab[0][7][1] == 'R' and tab[0][7][0] == language[1][1]): # curto
+                if (tab[0][5][0] == ' ' and tab[0][6][0] == ' '):
+                    list.append((6,0))
+            if (tab[0][0][1] == 'R' and tab[0][0][0] == language[1][1]): # longo
+                if (tab[0][1][0] == ' ' and tab[0][2][0] == ' ' and tab[0][3][0] == ' '):
+                    list.append((1,0))
 
     return list

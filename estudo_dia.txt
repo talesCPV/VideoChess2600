@@ -110,5 +110,6 @@
     Desenvolvimento da função check_scape, chamada quando a cpu esta em cheque.
 
 16/07
-    check_scape concluído
+    check_scape concluído (verificado e reverificado...)
     Criado o simulate, onde vc simula uma jogada e ele retorna True se for segura e false se não for
+    fix bug - chess_move -> roque branco e roque preto

@@ -219,12 +219,11 @@ def check_scape(): # Como vamos sair de um cheque?
     resp = []
     king_pos = (cpu_risk[0][0][0],cpu_risk[0][0][1])
     king_move = chess_move.move_by_index(king_pos,tab)
+    print('entrou king move',king_pos,king_move)
 
     for x in king_move: # opções de movimento do rei, descartadas as casas ameaçadas
-        for y in plr_reach:
-            for i in y[0]:
-                if (x == i):
-                    king_move.remove(x)
+        if not simulate((king_pos,x)):
+            king_move.remove(x)
 
     for x in cpu_risk: # Quem são as ameaças?
         if x[0][2] == language[0][4]:
@@ -236,6 +235,8 @@ def check_scape(): # Como vamos sair de um cheque?
             return []
         else:
             print('Fuga do rei')
+            print(king_pos,king_move)
+
     else:
         for x in cpu_reach:
             for y in x[0]:
@@ -248,14 +249,15 @@ def check_scape(): # Como vamos sair de um cheque?
                         return resp
                     else:
                         if len(king_move)>0:
-                            for move in king_move:
-                                if simulate((king_pos,move)):
-                                    lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
-                                    lit2 = chr(97 + move[0]) + str(8 - move[1])
-                                    resp = (lit1,lit2)
-                                    put_on_board(resp)
-                                else:
-                                    print('morreu')
+                            print('fuga', king_move) # fuga
+                            if simulate((king_pos, king_move[0])): #Posso comer esta peça?
+                                lit1 = chr(97 + king_pos[0]) + str(8 - king_pos[1])
+                                lit2 = chr(97 + king_move[0][0]) + str(8 - king_move[0][1])
+                                resp = (lit1,lit2)
+                                if not put_on_board(resp):
+                                    resp = []
+                            else:
+                                print('morri tbm')
                         else:
                             print('morri')
 
@@ -273,7 +275,9 @@ def simulate(index):
     new_tab[y1][x1] = (' ',' ')
     for y in range(8):
         for x in range(8):
-            new_plr_reach.append(chess_move.move_by_index((x,y),new_tab))
+            reach = chess_move.move_by_index((x,y),new_tab)
+            if len(reach)>0:
+                new_plr_reach.append(reach)
 
 
     for x in new_plr_reach:
