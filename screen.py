@@ -38,7 +38,7 @@ click = [] # coordenadas x & y
 possible = []
 pygame.init()
 language = [['R','H','B','Q','K','p'],['B','P']]
-screen = pygame.display.set_mode((540,540), 0, 32)
+screen = pygame.display.set_mode((542,542), 0, 32)
 pieces = pygame.image.load('pieces.png').convert_alpha()
 pieces = pygame.transform.scale(pieces, (372, 124)) # escala
 icon = pygame.image.load(os.getcwd() + '\icon.png')
