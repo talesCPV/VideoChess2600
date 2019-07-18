@@ -227,7 +227,7 @@ def check_scape(): # Como vamos sair de um cheque?
 
     i = 0
     while i < len(king_move): # opções de movimento do rei, descartadas as casas ameaçadas
-        if not safe_move((king_pos,king_move[i])):
+        if not simulate((king_pos,king_move[i]))[0]:
             king_move.remove(king_move[i])
         else:
             i += 1
@@ -240,47 +240,35 @@ def check_scape(): # Como vamos sair de um cheque?
         block = []
         for x in cpu_reach:
             for y in x[0]:
+                x1 = ord(x[1][-2]) - 97
+                y1 = 8 - int(x[1][-1])
                 if(y == (threat[0][0],threat[0][1])): # consigo matar a ameaça?
-                    x1 = ord(x[1][-2]) - 97
-                    y1 = 8 - int(x[1][-1])
+                    print('if',(x1,y1),'==',king_pos)
                     if not((x1,y1) == king_pos):
                         resp = (x[1],chr(97+ y[0]) + str(8 - y[1]))
                         put_on_board(resp)
                         return resp
-                    else:
-                        if len(king_move)>0:
-                            return runaway(king_pos,king_move)
-                else:
-                    x1 = ord(x[1][-2]) - 97
-                    y1 = 8 - int(x[1][-1])
-                    print('consigo proteger o rei?',(x1,y1),y)
-                    print(still_in_check(((x1,y1),y)))
-
+                if not simulate(((x1,y1),y))[1]:
+                    block.append(((x1,y1),y))
+        if len(block)>0: # podemos bloquear o cheque, vamos organizar a lista de block do menor pra maior
+            print('block',block)
+            for i in range(4):
+                for x in block:
+                    resp = (chr(97 + x[0][0]) + str(8 - x[0][1]), chr(97 + x[1][0]) + str(8 - x[1][1]))
+                    if i == 0 and tab[x[0][1]][x[0][0]][1] == language[0][5]:
+                        put_on_board(resp)
+                        return resp
+                    if i == 1 and (tab[x[0][1]][x[0][0]][1] == language[0][0] or tab[x[0][1]][x[0][0]][1] == language[0][2]):
+                        put_on_board(resp)
+                        return resp
+                    if i == 2 and tab[x[0][1]][x[0][0]][1] == language[0][1]:
+                        put_on_board(resp)
+                        return resp
+                    if i == 3 and tab[x[0][1]][x[0][0]][1] == language[0][3]:
+                        put_on_board(resp)
+                        return resp
 
     return runaway(king_pos, king_move)
-
-def safe_move(index):
-    new_tab = copy.deepcopy(tab)
-    new_plr_reach = []
-    resp = True
-    x1 = index[0][0]
-    y1 = index[0][1]
-    x2 = index[1][0]
-    y2 = index[1][1]
-    new_tab[y2][x2] = new_tab[y1][x1]
-    new_tab[y1][x1] = (' ',' ')
-    for y in range(8):
-        for x in range(8):
-            reach = chess_move.move_by_index((x,y),new_tab)
-            if len(reach)>0:
-                new_plr_reach.append(reach)
-
-    for x in new_plr_reach:
-        for i in x:
-            if i == (x2,y2):
-                resp = False
-
-    return  resp
 
 def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
     resp = []
@@ -306,19 +294,22 @@ def runaway(piece, options):  # recebe um indice de uma peça em piece e as opç
                                     if (tab[x[1]][x[0]][1] == language[0][5]):
                                         exit = [x, language[0][5]]
 
-        if safe_move((piece, exit[0])):  # Posição segura?
+        if simulate((piece, exit[0]))[0]:  # Posição segura? simulate[0]
             lit1 = chr(97 + piece[0]) + str(8 - piece[1])
             lit2 = chr(97 + exit[0][0]) + str(8 - exit[0][1])
             resp = (lit1, lit2)
+            print('runaway', resp)
             if not put_on_board(resp):
                 resp = []
 
     return resp
 
-def still_in_check(index):
+def simulate(index): # index = [[x1,y1][x2,x2]] -> return = (True,False), onde o primeiro é se a jogada é segura e o segundo se vc ainda esta em cheque ou não
+    king = []
     new_tab = copy.deepcopy(tab)
     new_plr_reach = []
-    resp = True
+    resp1 = True
+    resp2 = False
     x1 = index[0][0]
     y1 = index[0][1]
     x2 = index[1][0]
@@ -328,12 +319,17 @@ def still_in_check(index):
     for y in range(8):
         for x in range(8):
             reach = chess_move.move_by_index((x, y), new_tab)
+            if new_tab[y][x][0] == cpu_color and new_tab[y][x][1] == language[0][4]: # acheo o rei da cpu
+                king = (x,y)
             if len(reach) > 0:
                 new_plr_reach.append(reach)
 
     for x in new_plr_reach:
         for i in x:
             if i == (x2, y2):
-                resp = False
+                resp1 = False
+            if i == king:
+                resp2 = True
 
-    return resp
+    return (resp1, resp2)
+
