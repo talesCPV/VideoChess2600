@@ -206,18 +206,27 @@ def defense():
             print('check scape ->',check_scape())
         else:
             print('peças ameaçadas', strike_back())
-
     else:
         resp = False
 
     return resp
 
-def strike_back():
+def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
     resp = []
-    for in_risk in cpu_risk:
+    for in_risk in cpu_risk: # quem esta em risco?
+        for x in cpu_reach:
+            for y in x[0]:
+                if y == (in_risk[1][0],in_risk[1][1]):   # consigo contra-atacar a ameaça?
+                    lit = chr(97 + in_risk[1][0]) + str(8 - in_risk[1][1])
+                    print('ataque',lit,x[1])
+                    if not cover(lit): # é seguro contra atacar?
+                        resp = (x[1],lit)
+                        print('return', resp)
+                        put_on_board(resp)
+                        return resp
         print('em risco ->', in_risk)
         lit = chr(97 + in_risk[0][0]) + str(8 - in_risk[0][1])
-        print('cover',cover(lit))
+        print('cover',lit,cover(lit))
 
     return resp
 

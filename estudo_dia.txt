@@ -118,3 +118,6 @@
     check_scape mais uma vez atualizado - Fix bugs e simplificação de algorítimo
         - ainda falta um caso: quando o rei esta em cheque mas posso colocar uma peça o protegendo - bug fixed
     início da função strike_back
+
+18/07
+    função cover(lit): recebe uma posição literal e retorna True se esta posição estiver protegida por outra peça e false se não
