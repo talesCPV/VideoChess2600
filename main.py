@@ -98,8 +98,6 @@ while True:
             literal[0] = literal[1]
             literal[1] = (chr(97+ get_cord_pos(pygame.mouse.get_pos())[0]) + str(8 - get_cord_pos(pygame.mouse.get_pos())[1]))
             mouse_click(pygame.mouse.get_pos())
-#            chess_ai.get_move('BHc3',tabuleiro)
-
 
     if render: # só renderiza a tela quando precisa
         screen.show(tabuleiro)

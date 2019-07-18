@@ -216,6 +216,8 @@ def strike_back():
     resp = []
     for in_risk in cpu_risk:
         print('em risco ->', in_risk)
+        lit = chr(97 + in_risk[0][0]) + str(8 - in_risk[0][1])
+        print('cover',cover(lit))
 
     return resp
 
@@ -332,4 +334,28 @@ def simulate(index): # index = [[x1,y1][x2,x2]] -> return = (True,False), onde o
                 resp2 = True
 
     return (resp1, resp2)
+
+def cover(lit): # receive a position and return True if position is cover and False if not
+    new_tab = copy.deepcopy(tab)
+    new_cpu_reach = []
+    x1 = ord(lit[-2]) - 97
+    y1 = 8 - int(lit[-1])
+    my_color = new_tab[y1][x1][0]
+    new_tab[y1][x1] = (' ', ' ')
+    resp = False
+    reach = []
+    for y in range(8):
+        for x in range(8):
+            if new_tab[y][x][0] == my_color:
+                reach = chess_move.move_by_index((x, y), new_tab)
+            if len(reach) > 0:
+                new_cpu_reach.append(reach)
+
+    for x in new_cpu_reach:
+        for i in x:
+            if i == (x1, y1):
+                resp = True
+
+    return resp
+
 
