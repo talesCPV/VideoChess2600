@@ -24,37 +24,10 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
         check_game_stage()
         defense()
 
-
 #    print('Colors:',cpu_color,plr_color)
 #    print('Positions:',cpu_pos,plr_pos)
 #    print('Reachs:',cpu_reach,plr_reach)
 #    print('Risk:',cpu_risk,plr_risk)
-
-
-def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
-    index = (lit_ind(lit[0]),lit_ind(lit[1]))
-    moves = chess_move.move(lit[0], tab)
-    colors(index)
-    resp = True
-    try:
-        x1 = index[0][0]
-        y1 = index[0][1]
-        x2 = index[1][0]
-        y2 = index[1][1]
-        for i in moves:
-            if i == (x2, y2):
-                tab[y2][x2] = tab[y1][x1]
-                tab[y1][x1] = (' ', ' ')
-                print('->', x1, y1, ' - ', x2, y2)
-                resp = True
-                break
-            else:
-                resp = False
-    except:
-        print('jogada impossível')
-        resp = False
-
-    return resp
 
 def colors(index): # define as cores do jogador e da CPU
     global cpu_color, plr_color
@@ -131,26 +104,6 @@ def risk_order(risk): # organiza o risco por ordem de peças ameaçadas (Rei, Da
         for x in risk:
             if piece_value(x[0]) == 5-i:
                 resp.append(x)
-    return resp
-
-def piece_value(piece):
-    resp = 0
-    x = piece[0]
-    y = piece[1]
-    tab_piece = tab[y][x][1]
-    if   tab_piece == language[0][0]:
-        resp = 2
-    elif tab_piece == language[0][1]:
-        resp = 3
-    elif tab_piece == language[0][2]:
-        resp = 2
-    elif tab_piece == language[0][3]:
-        resp = 4
-    elif tab_piece == language[0][4]:
-        resp = 5
-    elif tab_piece == language[0][5]:
-        resp = 1
-
     return resp
 
 def check_game_stage():
@@ -247,18 +200,28 @@ def check_scape(): # Como vamos sair de um cheque?
 
     if len(threat) == 1: # Existe apenas uma ameaça?
         block = []
+        stk_bk = []
         threat = threat[0]
+
         for x in cpu_reach:
             for y in x[0]:
                 x1, y1 = lit_ind(x[1])
                 if(y == (threat[0],threat[1])): # consigo matar a ameaça?
-                    if not((x1,y1) == king_pos):
+                    if not((x1,y1) == king_pos): # se nao for o rei, adicione na lista de ataques possíveis
                         resp = (x[1], ind_lit(y))
-                        put_on_board(resp)
-                        return resp
+                        stk_bk.append(resp)
                 if (not simulate(((x1,y1),y))[1] and not (x1,y1) == king_pos ): # O rei não pode bloquear um cheque
                     block.append(((x1,y1),y))
-        if len(block)>0: # podemos bloquear o cheque, vamos organizar a lista de block do menor pra maior
+        if len(stk_bk)>0: # podemos contra-atacar?
+            ord = []
+            for i in range(6): # Organiza as opções de ataque das peças de menor para a de maior valor
+                for x in stk_bk:
+                    if piece_value(lit_ind(x[0])) == i:
+                        ord.append(x)
+
+            put_on_board(ord[0])
+            return resp
+        elif len(block)>0: # podemos bloquear o cheque, vamos organizar a lista de block do menor pra maior
             for i in range(5):
                 for x in block:
                     if piece_value(x[0]) == i: # do menor para o maior
@@ -267,6 +230,53 @@ def check_scape(): # Como vamos sair de um cheque?
                             return resp
 
     return runaway(king_pos, king_move)
+
+# ------------------- UTEIS ------------------- #
+
+def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
+    index = (lit_ind(lit[0]),lit_ind(lit[1]))
+    moves = chess_move.move(lit[0], tab)
+    colors(index)
+    resp = True
+    try:
+        x1 = index[0][0]
+        y1 = index[0][1]
+        x2 = index[1][0]
+        y2 = index[1][1]
+        for i in moves:
+            if i == (x2, y2):
+                tab[y2][x2] = tab[y1][x1]
+                tab[y1][x1] = (' ', ' ')
+                print('->', x1, y1, ' - ', x2, y2)
+                resp = True
+                break
+            else:
+                resp = False
+    except:
+        print('jogada impossível')
+        resp = False
+
+    return resp
+
+def piece_value(piece):
+    resp = 0
+    x = piece[0]
+    y = piece[1]
+    tab_piece = tab[y][x][1]
+    if   tab_piece == language[0][0]:
+        resp = 2
+    elif tab_piece == language[0][1]:
+        resp = 3
+    elif tab_piece == language[0][2]:
+        resp = 2
+    elif tab_piece == language[0][3]:
+        resp = 4
+    elif tab_piece == language[0][4]:
+        resp = 5
+    elif tab_piece == language[0][5]:
+        resp = 1
+
+    return resp
 
 def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
     resp = []
