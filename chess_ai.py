@@ -16,6 +16,7 @@ game_stage = 1
 def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Cavalo de b1 para casa a3
     global tab
     tab = board
+    print('------------------ NOVA JOGADA -----------------')
     if put_on_board(lit): # a jogada recebida pode ser efetuada?
         positions()
         reachs()
@@ -137,6 +138,7 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
                     _x = cpu[0]
                     _y = cpu[1]
                     cpu_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
+
     if len(cpu_risk)>0:
         cpu_risk = risk_order(cpu_risk)
 
@@ -144,18 +146,27 @@ def risk_order(risk): # organiza o risco por ordem de peças ameaçadas (Rei, Da
     resp = []
     for i in range(6):
         for x in risk:
-            if (i == 0 and x[0][2] == language[0][4]):
+            if piece_value(x[0]) == 5-i:
                 resp.append(x)
-            if (i == 1 and x[0][2] == language[0][3]):
-                resp.append(x)
-            if (i == 2 and x[0][2] == language[0][1]):
-                resp.append(x)
-            if (i == 3 and x[0][2] == language[0][2]):
-                resp.append(x)
-            if (i == 4 and x[0][2] == language[0][0]):
-                resp.append(x)
-            if (i == 5 and x[0][2] == language[0][5]):
-                resp.append(x)
+    return resp
+
+def piece_value(piece):
+    resp = 0
+    x = piece[0]
+    y = piece[1]
+    tab_piece = tab[y][x][1]
+    if   tab_piece == language[0][0]:
+        resp = 2
+    elif tab_piece == language[0][1]:
+        resp = 3
+    elif tab_piece == language[0][2]:
+        resp = 2
+    elif tab_piece == language[0][3]:
+        resp = 4
+    elif tab_piece == language[0][4]:
+        resp = 5
+    elif tab_piece == language[0][5]:
+        resp = 1
 
     return resp
 
@@ -200,31 +211,35 @@ def check_game_stage():
     #print(game_stage)
 
 def defense():
+    resp = []
     if len(cpu_risk)>0:
-        resp = True
-        if cpu_risk[0][0][2] == language[0][4]: # A CPU esta em cheque?
-            print('check scape ->',check_scape())
+        if cpu_risk[0][0][2] == language[0][4]: # A CPU esta em cheque? PS: cpu_risk já esta em ordem de prioridade, um ataque ao rei seria o primeiro da fila
+#            print('check scape ->',check_scape())
+            resp = check_scape()
+            if len(resp) == 0:
+                print('Cheque Matte!!!')
         else:
-            print('peças ameaçadas', strike_back())
-    else:
-        resp = False
+#            print('peças ameaçadas', strike_back())
+            resp = strike_back()
+#    else:
+#        resp = False
 
     return resp
 
 def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
     resp = []
     for in_risk in cpu_risk: # quem esta em risco?
-        for x in cpu_reach:
+        print('em risco ->', in_risk)
+        for x in cpu_reach: # ideia: fazer uma lista de jogadas de contra ataque e atacar com a peça de menor valor
             for y in x[0]:
                 if y == (in_risk[1][0],in_risk[1][1]):   # consigo contra-atacar a ameaça?
                     lit = chr(97 + in_risk[1][0]) + str(8 - in_risk[1][1])
-                    print('ataque',lit,x[1])
+                    print('contra-ataque',x[1], lit, cover(lit))
                     if not cover(lit): # é seguro contra atacar?
                         resp = (x[1],lit)
                         print('return', resp)
                         put_on_board(resp)
                         return resp
-        print('em risco ->', in_risk)
         lit = chr(97 + in_risk[0][0]) + str(8 - in_risk[0][1])
         print('cover',lit,cover(lit))
 
@@ -249,70 +264,43 @@ def check_scape(): # Como vamos sair de um cheque?
 
     if len(threat) == 1: # Existe apenas uma ameaça?
         block = []
+        threat = threat[0]
         for x in cpu_reach:
             for y in x[0]:
                 x1 = ord(x[1][-2]) - 97
                 y1 = 8 - int(x[1][-1])
-                if(y == (threat[0][0],threat[0][1])): # consigo matar a ameaça?
-                    print('if',(x1,y1),'==',king_pos)
+                if(y == (threat[0],threat[1])): # consigo matar a ameaça?
                     if not((x1,y1) == king_pos):
                         resp = (x[1],chr(97+ y[0]) + str(8 - y[1]))
                         put_on_board(resp)
                         return resp
-                if not simulate(((x1,y1),y))[1]:
+                if (not simulate(((x1,y1),y))[1] and not (x1,y1) == king_pos ): # O rei não pode bloquear um cheque
                     block.append(((x1,y1),y))
         if len(block)>0: # podemos bloquear o cheque, vamos organizar a lista de block do menor pra maior
-            print('block',block)
-            for i in range(4):
+            for i in range(5):
                 for x in block:
-                    resp = (chr(97 + x[0][0]) + str(8 - x[0][1]), chr(97 + x[1][0]) + str(8 - x[1][1]))
-                    if i == 0 and tab[x[0][1]][x[0][0]][1] == language[0][5]:
-                        put_on_board(resp)
-                        return resp
-                    if i == 1 and (tab[x[0][1]][x[0][0]][1] == language[0][0] or tab[x[0][1]][x[0][0]][1] == language[0][2]):
-                        put_on_board(resp)
-                        return resp
-                    if i == 2 and tab[x[0][1]][x[0][0]][1] == language[0][1]:
-                        put_on_board(resp)
-                        return resp
-                    if i == 3 and tab[x[0][1]][x[0][0]][1] == language[0][3]:
-                        put_on_board(resp)
-                        return resp
+                    if piece_value(x[0]) == i: # do menor para o maior
+                        resp = (chr(97 + x[0][0]) + str(8 - x[0][1]), chr(97 + x[1][0]) + str(8 - x[1][1]))
+                        if put_on_board(resp):
+                            return resp
 
     return runaway(king_pos, king_move)
 
 def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
     resp = []
     if len(options) > 0:
-        exit = [options[0], ' ']
-        for x in options:  # escolhe a melhor saída da lista, se for pra comer uma peça adversária
-            if not exit[1] == language[0][4]:  # K
-                if (tab[x[1]][x[0]][1] == language[0][4]):
-                    exit = [x, language[0][4]]
-                elif not exit[1] == language[0][3]:  # Q
-                    if (tab[x[1]][x[0]][1] == language[0][3]):
-                        exit = [x, language[0][3]]
-                    elif not exit[1] == language[0][1]:  # H
-                        if (tab[x[1]][x[0]][1] == language[0][1]):
-                            exit = [x, language[0][1]]
-                        elif not exit[1] == language[0][2]:  # B
-                            if (tab[x[1]][x[0]][1] == language[0][2]):
-                                exit = [x, language[0][2]]
-                            elif not exit[1] == language[0][0]:  # R
-                                if (tab[x[1]][x[0]][1] == language[0][0]):
-                                    exit = [x, language[0][0]]
-                                elif not exit[1] == language[0][5]:  # p
-                                    if (tab[x[1]][x[0]][1] == language[0][5]):
-                                        exit = [x, language[0][5]]
-
-        if simulate((piece, exit[0]))[0]:  # Posição segura? simulate[0]
-            lit1 = chr(97 + piece[0]) + str(8 - piece[1])
-            lit2 = chr(97 + exit[0][0]) + str(8 - exit[0][1])
-            resp = (lit1, lit2)
-            print('runaway', resp)
-            if not put_on_board(resp):
-                resp = []
-
+        for i in range(6):
+            for x in options:  # organiza a lista de saidas, comer a peça mais valiosa primeiro
+                if piece_value(x) == 5-i:
+                    simu = simulate((piece, x))
+                    if (simu[0]) and not simu[1] :  # Posição segura? simulate[0]
+                        lit1 = chr(97 + piece[0]) + str(8 - piece[1])
+                        lit2 = chr(97 + x[0]) + str(8 - x[1])
+                        resp = (lit1, lit2)
+                        if put_on_board(resp):
+                            return resp
+                        else:
+                            resp = []
     return resp
 
 def simulate(index): # index = [[x1,y1][x2,x2]] -> return = (True,False), onde o primeiro é se a jogada é segura e o segundo se vc ainda esta em cheque ou não
@@ -350,7 +338,13 @@ def cover(lit): # receive a position and return True if position is cover and Fa
     x1 = ord(lit[-2]) - 97
     y1 = 8 - int(lit[-1])
     my_color = new_tab[y1][x1][0]
-    new_tab[y1][x1] = (' ', ' ')
+
+    if my_color == language[1][1]:
+        enemy_color = language[1][0]
+    else:
+        enemy_color = language[1][1]
+
+    new_tab[y1][x1] = (enemy_color, 'p') # simula um peão inimigo no lugar da peça
     resp = False
     reach = []
     for y in range(8):
@@ -366,5 +360,3 @@ def cover(lit): # receive a position and return True if position is cover and Fa
                 resp = True
 
     return resp
-
-
