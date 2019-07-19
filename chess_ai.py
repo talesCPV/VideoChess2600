@@ -32,7 +32,7 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
 
 
 def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
-    index = lit_to_index(lit)
+    index = (lit_ind(lit[0]),lit_ind(lit[1]))
     moves = chess_move.move(lit[0], tab)
     colors(index)
     resp = True
@@ -53,19 +53,6 @@ def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
     except:
         print('jogada impossível')
         resp = False
-
-    return resp
-
-def lit_to_index(lit): # converte notação algébrica longa para índices de tabuleiro, ex: ('b1','a3') -> ((1,7),(0,5))
-    try:
-        x0 = ord(lit[0][-2]) - 97
-        y0 = 8 - int(lit[0][-1])  # transformo o literal destino em índice
-        x1 = ord(lit[1][-2]) - 97
-        y1 = 8 - int(lit[1][-1])  # transformo o literal destino em índice
-
-        resp = ((x0,y0),(x1,y1))
-    except:
-        resp = []
 
     return resp
 
@@ -121,10 +108,9 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
         for plr in plr_pos:
             for i in cpu[0]:
                 if i == plr:
-                    x_, y_ = lit_ind(cpu[1])  #= ord(cpu[1][-2]) - 97
+                    x_, y_ = lit_ind(cpu[1])
                     _x, _y = plr
                     plr_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
-#                    print('plr risk', plr_risk)
     if len(plr_risk)>0:
         plr_risk = risk_order(plr_risk)
 
@@ -132,10 +118,8 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
         for cpu in cpu_pos:
             for i in plr[0]:
                 if i == cpu:
-                    x_ = ord(plr[1][-2]) - 97
-                    y_ = 8 - int(plr[1][-1])
-                    _x = cpu[0]
-                    _y = cpu[1]
+                    x_, y_ = lit_ind(plr[1])
+                    _x, _y = cpu
                     cpu_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
 
     if len(cpu_risk)>0:
