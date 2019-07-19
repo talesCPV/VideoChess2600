@@ -100,12 +100,12 @@ def reachs(): # Pega os lances possíveis de cada jogador (em índices)
         plr_reach.remove(plr_reach[0])
 
     for x in cpu_pos:
-        lit =  chr(97+ x[0]) + str(8 - x[1])
+        lit =  ind_lit(x)
         reach = (chess_move.move(lit,tab),lit)
         if len(reach[0]) > 0:
             cpu_reach.append(reach)
     for x in plr_pos:
-        lit =  chr(97+ x[0]) + str(8 - x[1])
+        lit =  ind_lit(x)
         reach = (chess_move.move(lit, tab), lit)
         if len(reach[0]) > 0:
             plr_reach.append(reach)
@@ -121,11 +121,10 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
         for plr in plr_pos:
             for i in cpu[0]:
                 if i == plr:
-                    x_ = ord(cpu[1][-2]) - 97
-                    y_ = 8 - int(cpu[1][-1])
-                    _x = plr[0]
-                    _y = plr[1]
+                    x_, y_ = lit_ind(cpu[1])  #= ord(cpu[1][-2]) - 97
+                    _x, _y = plr
                     plr_risk.append(((_x,_y, tab[_y][_x][1]),(x_, y_, tab[y_][x_][1])))
+#                    print('plr risk', plr_risk)
     if len(plr_risk)>0:
         plr_risk = risk_order(plr_risk)
 
@@ -240,8 +239,8 @@ def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
                         print('return', resp)
                         put_on_board(resp)
                         return resp
-        lit = chr(97 + in_risk[0][0]) + str(8 - in_risk[0][1])
-        print('cover',lit,cover(lit))
+        lit = ind_lit(in_risk[0])
+        print('cover ->',lit,cover(lit))
 
     return resp
 
@@ -267,11 +266,10 @@ def check_scape(): # Como vamos sair de um cheque?
         threat = threat[0]
         for x in cpu_reach:
             for y in x[0]:
-                x1 = ord(x[1][-2]) - 97
-                y1 = 8 - int(x[1][-1])
+                x1, y1 = lit_ind(x[1])
                 if(y == (threat[0],threat[1])): # consigo matar a ameaça?
                     if not((x1,y1) == king_pos):
-                        resp = (x[1],chr(97+ y[0]) + str(8 - y[1]))
+                        resp = (x[1], ind_lit(y))
                         put_on_board(resp)
                         return resp
                 if (not simulate(((x1,y1),y))[1] and not (x1,y1) == king_pos ): # O rei não pode bloquear um cheque
@@ -280,7 +278,7 @@ def check_scape(): # Como vamos sair de um cheque?
             for i in range(5):
                 for x in block:
                     if piece_value(x[0]) == i: # do menor para o maior
-                        resp = (chr(97 + x[0][0]) + str(8 - x[0][1]), chr(97 + x[1][0]) + str(8 - x[1][1]))
+                        resp = (ind_lit(x[0]),ind_lit(x[1]))
                         if put_on_board(resp):
                             return resp
 
@@ -288,14 +286,15 @@ def check_scape(): # Como vamos sair de um cheque?
 
 def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
     resp = []
+    print('runaway')
     if len(options) > 0:
         for i in range(6):
             for x in options:  # organiza a lista de saidas, comer a peça mais valiosa primeiro
                 if piece_value(x) == 5-i:
                     simu = simulate((piece, x))
                     if (simu[0]) and not simu[1] :  # Posição segura? simulate[0]
-                        lit1 = chr(97 + piece[0]) + str(8 - piece[1])
-                        lit2 = chr(97 + x[0]) + str(8 - x[1])
+                        lit1 = ind_lit(piece)
+                        lit2 = ind_lit(x)
                         resp = (lit1, lit2)
                         if put_on_board(resp):
                             return resp
@@ -335,8 +334,8 @@ def simulate(index): # index = [[x1,y1][x2,x2]] -> return = (True,False), onde o
 def cover(lit): # receive a position and return True if position is cover and False if not
     new_tab = copy.deepcopy(tab)
     new_cpu_reach = []
-    x1 = ord(lit[-2]) - 97
-    y1 = 8 - int(lit[-1])
+    x1 = lit_ind(lit)[0]
+    y1 = lit_ind(lit)[1]
     my_color = new_tab[y1][x1][0]
 
     if my_color == language[1][1]:
@@ -358,5 +357,23 @@ def cover(lit): # receive a position and return True if position is cover and Fa
         for i in x:
             if i == (x1, y1):
                 resp = True
+
+    return resp
+
+def ind_lit(index): # Recebe um index e transforma em literal
+    try:
+        ind = chr(97 + index[0]) + str(8 - index[1])
+    except:
+        ind = ()
+
+    return ind
+
+def lit_ind(lit): # recebe um literal e transforma em index
+    try:
+        x = ord(lit[-2]) - 97
+        y = 8 - int(lit[-1])
+        resp = (x,y)
+    except:
+        resp = ()
 
     return resp
