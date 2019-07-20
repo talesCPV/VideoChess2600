@@ -150,34 +150,48 @@ def defense():
     resp = []
     if len(cpu_risk)>0:
         if cpu_risk[0][0][2] == language[0][4]: # A CPU esta em cheque? PS: cpu_risk já esta em ordem de prioridade, um ataque ao rei seria o primeiro da fila
-#            print('check scape ->',check_scape())
             resp = check_scape()
             if len(resp) == 0:
                 print('Cheque Matte!!!')
         else:
-#            print('peças ameaçadas', strike_back())
             resp = strike_back()
-#    else:
-#        resp = False
 
     return resp
 
 def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
+    threat = []
     resp = []
+    stk_bk = []
     for in_risk in cpu_risk: # quem esta em risco?
         print('em risco ->', in_risk)
-        for x in cpu_reach: # ideia: fazer uma lista de jogadas de contra ataque e atacar com a peça de menor valor
-            for y in x[0]:
-                if y == (in_risk[1][0],in_risk[1][1]):   # consigo contra-atacar a ameaça?
-                    lit = chr(97 + in_risk[1][0]) + str(8 - in_risk[1][1])
-                    print('contra-ataque',x[1], lit, cover(lit))
-                    if not cover(lit): # é seguro contra atacar?
-                        resp = (x[1],lit)
-                        print('return', resp)
-                        put_on_board(resp)
-                        return resp
-        lit = ind_lit(in_risk[0])
-        print('cover ->',lit,cover(lit))
+        threat.append(in_risk[1])
+        if len(threat)> 1:
+            for i in range(len(threat)-1):
+                if threat[i] == in_risk[1]:
+                    threat.remove(threat[i])
+    print('ameaças ->', threat)
+
+
+#        print('em risco ->', in_risk)
+#        print('cpu reach', cpu_reach)
+#        for x in cpu_reach: # ideia: fazer uma lista de jogadas de contra ataque e atacar com a peça de menor valor
+#            for y in x[0]:
+#                print('y,x ->', y,x[1])
+#                if y == (in_risk[1][0],in_risk[1][1]):   # consigo contra-atacar a ameaça?
+#                    stk_bk.append((x[1], ind_lit(y)))
+#                    print('->',in_risk[0])
+#                    break
+#                    lit = chr(97 + in_risk[1][0]) + str(8 - in_risk[1][1])
+#                    print('contra-ataque',x[1], lit, cover(lit))
+#                    if not cover(lit): # é seguro contra atacar?
+#                        if not  simulate((lit_ind(x[1]),lit_ind(lit)))[1]: # este movimento não irá deixar meu rei em cheque?
+#                            resp = (x[1],lit)
+#                            print('return', resp)
+#                            put_on_board(resp)
+#                            return resp
+#            print('stk_bk',stk_bk)
+#        lit = ind_lit(in_risk[0])
+#        print('cover ->',lit,cover(lit))
 
     return resp
 

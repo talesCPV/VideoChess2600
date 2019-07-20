@@ -124,3 +124,6 @@
     função piece_value(index), onde vc manda a posição de uma peça qualquer no tab e ele retorna o peso desta peça (rei = 5, dama = 4 ...)
         - ideal para organizar listas por prioridade tanto do maior pro menor quanto do menor pro maior
     cover(lit): fix bug - alcance do peão, agora smulo uma peça adversária na casa e não mais vazia
+
+19/07
+    sessão de funções úteis criadas para serem usadaspor diversas outras funções
