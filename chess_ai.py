@@ -169,10 +169,16 @@ def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
             for i in range(len(threat)-1):
                 if threat[i] == in_risk[1]:
                     threat.remove(threat[i])
-    print('ameaças ->', threat)
 
+    for i in range(6):  # Organiza as opções de ataque das peças de maior para o menor valor
+        for x in threat:
+            if piece_value(x) == 5-i:
+                stk_bk.append(x)
+    for x in stk_bk:
+        print('cover',cover(ind_lit(x)))
+        print('x',x)
 
-#        print('em risco ->', in_risk)
+    #        print('em risco ->', in_risk)
 #        print('cpu reach', cpu_reach)
 #        for x in cpu_reach: # ideia: fazer uma lista de jogadas de contra ataque e atacar com a peça de menor valor
 #            for y in x[0]:
@@ -261,7 +267,7 @@ def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
             if i == (x2, y2):
                 tab[y2][x2] = tab[y1][x1]
                 tab[y1][x1] = (' ', ' ')
-                print('->', x1, y1, ' - ', x2, y2)
+                print('->', x1, y1, '-', x2, y2,' | ', ind_lit((x1,y1)),'-', ind_lit((x2,y2)))
                 resp = True
                 break
             else:

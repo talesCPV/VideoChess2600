@@ -48,6 +48,7 @@ pygame.display.set_caption('Video Chess 2600')
 def show(tab):
     screen.fill([0, 0, 0])
     draw_board()
+    write_border()
     fill_board(tab)
     draw_square()
     pygame.display.update()
@@ -129,4 +130,3 @@ def fill_board(tab): # enche o tabuleiro com as peças
             if not(tab[y][x][1].strip() ==  ''):
                 xy =  [x*64+15, y*64+15] # monta x e y no screen (15 é o valor da borda e 64 o valor de cada casa em pixels)
                 screen.blit(pieces, xy, get_pieces(tab[y][x]) + (62, 62))
-                write_border()

@@ -127,3 +127,7 @@
 
 19/07
     sessão de funções úteis criadas para serem usadaspor diversas outras funções
+
+21/07
+    fix bug - passei a função write_border() para o show()
+    Estudo de movimentos em strike_back()
