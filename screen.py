@@ -41,8 +41,8 @@ language = [['R','H','B','Q','K','p'],['B','P']]
 screen = pygame.display.set_mode((542,542), 0, 32)
 pieces = pygame.image.load('pieces.png').convert_alpha()
 pieces = pygame.transform.scale(pieces, (372, 124)) # escala
-icon = pygame.image.load(os.getcwd() + '\icon.png')
-pygame.display.set_icon(icon)
+#icon = pygame.image.load(os.getcwd() + '\icon.png')
+#pygame.display.set_icon(icon)
 pygame.display.set_caption('Video Chess 2600')
 
 def show(tab):
