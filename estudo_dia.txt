@@ -131,3 +131,6 @@
 21/07
     fix bug - passei a função write_border() para o show()
     Estudo de movimentos em strike_back()
+
+22/07
+    Alteração em cpu_risk e plr_risk, agora caso haja mais de uma peça ameaçando outra ele junta td, ou seja, para cada peça ameaçada existe uma lista de ameaças

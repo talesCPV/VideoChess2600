@@ -27,7 +27,7 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
 #    print('Colors:',cpu_color,plr_color)
 #    print('Positions:',cpu_pos,plr_pos)
 #    print('Reachs:',cpu_reach,plr_reach)
-    print('Risk:',cpu_risk,plr_risk)
+#    print('Risk:',cpu_risk,plr_risk)
 
 def colors(index): # define as cores do jogador e da CPU
     global cpu_color, plr_color
@@ -86,7 +86,7 @@ def check_risk(): # verifica qual peça esta sendo ameaçada por qual
                     x_, y_ = lit_ind(cpu[1])
                     threat.append((x_, y_, tab[y_][x_][1]))
         if len(threat)>0:
-            cpu_risk.append((plr, threat))
+            plr_risk.append((plr, threat))
 
     if len(plr_risk)>0:
         plr_risk = risk_order(plr_risk)
@@ -158,6 +158,7 @@ def defense():
         x = cpu_risk[0][0][0]
         y = cpu_risk[0][0][1]
         print('cpu risk', cpu_risk)
+        print('plr risk', plr_risk)
         if tab[y][x][1] == language[0][4]: # A CPU esta em cheque? PS: cpu_risk já esta em ordem de prioridade, um ataque ao rei seria o primeiro da fila
             resp = check_scape()
             if len(resp) == 0:
@@ -168,17 +169,17 @@ def defense():
     return resp
 
 def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
-    threat = []
     resp = []
-    stk_bk = []
 
     for in_risk in cpu_risk: # quem esta em risco?
         print('em risco ->', in_risk)
-        threat.append(in_risk[1])
-        if len(threat)> 1:
-            for i in range(len(threat)-1):
-                if threat[i] == in_risk[1]:
-                    threat.remove(threat[i])
+        if len(in_risk[1]) == 1:
+#            print(ind_lit(in_risk[0]),'cover', cover(ind_lit(in_risk[0])))
+            if cover(ind_lit(in_risk[0])):
+                print('compare', compare(in_risk[0],in_risk[1][0]))
+        else:
+            print('risco hard')
+
 #        try_scape((in_risk[0][0],in_risk[0][1]))
 
 #    for i in range(6):  # Organiza as opções de ataque das peças de maior para o menor valor
@@ -406,25 +407,11 @@ def lit_ind(lit): # recebe um literal e transforma em index
 
     return resp
 
+def compare(ind1,ind2): # recebe 2 índices e retorna True se o primeiro for menor ou igual
+    p1 = piece_value(ind1)
+    p2 = piece_value(ind2)
+    if p1 <= p2:
+        return True
+    else:
+        return False
 
-def try_scape(index): #Recebe um índice e tenta escapar com esta peça
-    resp =  False
-    threat = []
-    x_ = index[0]
-    y_ = index[1]
-#    my_color = tab[y_][x_][0]
-#    my_piece = tab[y_][x_][1]
-#    if my_color == language[1][1]:
-#        enemy_color = language[1][0]
-#    else:
-#        enemy_color = language[1][1]
-#
-    for x in plr_reach:
-        for y in x[0]:
-            if y == (x_,y_):
-                print('ameaça em',x[1])
-
-
-
-
-    return resp
