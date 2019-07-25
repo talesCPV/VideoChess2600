@@ -157,8 +157,6 @@ def defense():
     if len(cpu_risk)>0:
         x = cpu_risk[0][0][0]
         y = cpu_risk[0][0][1]
-        print('cpu risk', cpu_risk)
-        print('plr risk', plr_risk)
         if tab[y][x][1] == language[0][4]: # A CPU esta em cheque? PS: cpu_risk já esta em ordem de prioridade, um ataque ao rei seria o primeiro da fila
             resp = check_scape()
             if len(resp) == 0:
@@ -170,49 +168,42 @@ def defense():
 
 def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
     resp = []
-
     for in_risk in cpu_risk: # quem esta em risco?
-        print('em risco ->', in_risk)
+        print('em risco ->', in_risk, len(in_risk[1]))
         if len(in_risk[1]) == 1:
-#            print(ind_lit(in_risk[0]),'cover', cover(ind_lit(in_risk[0])))
-            if cover(ind_lit(in_risk[0])):
-                print('compare', compare(in_risk[0],in_risk[1][0]))
-        else:
-            print('risco hard')
+            opt = []
+            for x in cpu_reach: # preencho uma lista com as opções de contra-ataque para esta peça
+                for y in x[0]:
+                    if y == (in_risk[1][0][0],in_risk[1][0][1]):
+                        opt.append((y,x[1]))
+            for i in range(6):
+                for x in opt:  # organiza a lista de saidas, comer a peça mais valiosa primeiro
+                    if piece_value(lit_ind(x[1])) == i:
+                        if not(cover(ind_lit(x[0]))) and not(simulate((lit_ind(x[1]),x[0]))[1]):
+                            resp = (x[1],ind_lit(x[0]))
+                            put_on_board(resp)
+                            return resp
 
-#        try_scape((in_risk[0][0],in_risk[0][1]))
-
-#    for i in range(6):  # Organiza as opções de ataque das peças de maior para o menor valor
-#        for x in threat:
-#            if piece_value(x) == 5-i:
-#                stk_bk.append(x)
-#    for x in stk_bk:
-#        print('cover',cover(ind_lit(x)))
-#        print('x',x)
+                        print('opt', x, x[0], lit_ind(x[1]))
+                        print('compare',compare(lit_ind(x[1]),x[0]))
+                        print('cover',cover(ind_lit(x[0])))
+                        print('simulate',simulate((lit_ind(x[1]),x[0]))[1])
 
 
 
+#            print('compare',in_risk[0],in_risk[1][0],compare(in_risk[0],in_risk[1][0]))
+#            if compare(in_risk[0],in_risk[1][0]): #compensa trocar as peças?
+#                if not (cover(ind_lit(in_risk[0]))): # minha peça não esta coberta?
+##                    return runaway(in_risk[0],chess_move.move_by_index(in_risk[0],tab))
+#                else:
+#                    print('deixa como esta, sua peça esta coberta e compensa a troca')
+#            else: # não compensa a troca
+#                return runaway(in_risk[0], chess_move.move_by_index(in_risk[0], tab))
 
-    #        print('em risco ->', in_risk)
-#        print('cpu reach', cpu_reach)
-#        for x in cpu_reach: # ideia: fazer uma lista de jogadas de contra ataque e atacar com a peça de menor valor
-#            for y in x[0]:
-#                print('y,x ->', y,x[1])
-#                if y == (in_risk[1][0],in_risk[1][1]):   # consigo contra-atacar a ameaça?
-#                    stk_bk.append((x[1], ind_lit(y)))
-#                    print('->',in_risk[0])
-#                    break
-#                    lit = chr(97 + in_risk[1][0]) + str(8 - in_risk[1][1])
-#                    print('contra-ataque',x[1], lit, cover(lit))
-#                    if not cover(lit): # é seguro contra atacar?
-#                        if not  simulate((lit_ind(x[1]),lit_ind(lit)))[1]: # este movimento não irá deixar meu rei em cheque?
-#                            resp = (x[1],lit)
-#                            print('return', resp)
-#                            put_on_board(resp)
-#                            return resp
-#            print('stk_bk',stk_bk)
-#        lit = ind_lit(in_risk[0])
-#        print('cover ->',lit,cover(lit))
+#        else:
+#            print('mais de uma ameaça')
+
+
 
     return resp
 
@@ -414,4 +405,55 @@ def compare(ind1,ind2): # recebe 2 índices e retorna True se o primeiro for men
         return True
     else:
         return False
+
+def try_cover(index):
+    new_tab = copy.deepcopy(tab)
+    new_tab[index[0][1]][index[0][0]] = (' ', ' ')
+
+    resp = []
+
+    for x in cpu_reach:
+        pc = lit_ind(x[1])
+        x1 = pc[0]
+        y1 = pc[1]
+        for y in x[0]:
+            x2 = y[0]
+            y2 = y[1]
+            new_tab[y2][x2] = new_tab[y1][x1]
+            new_tab[y1][x1] = (' ', ' ')
+
+            new_pos = copy.deepcopy(cpu_pos)
+            new_pos.remove((x1,y1))
+            new_pos.append((x2,y2))
+            new_reach = []
+
+            for i in new_pos:
+                lit = ind_lit(i)
+                reach = (chess_move.move(lit, new_tab), lit)
+                if len(reach[0]) > 0:
+                    new_reach.append(reach)
+
+            for a in cpu_reach:
+                i = 0
+                while i < len(new_reach):
+                    if new_reach[i] == a:
+                        new_reach.remove(new_reach[i])
+                    else:
+                        i +=1
+#            print('reach new', new_reach)
+#            print('reach old', cpu_reach)
+
+            for a in new_reach:
+                print('a',a, index[0])
+                for b in a[0]:
+                    print('b',b)
+                    if index[0] == b:
+                        resp.append((a[1],ind_lit(b)))
+                        print(a[1],b,'->', resp)
+            print('-------------------------')
+
+            new_tab[y1][x1] = new_tab[y2][x2]
+            new_tab[y2][x2] = (' ', ' ')
+    return resp
+
 

@@ -134,3 +134,15 @@
 
 22/07
     Alteração em cpu_risk e plr_risk, agora caso haja mais de uma peça ameaçando outra ele junta td, ou seja, para cada peça ameaçada existe uma lista de ameaças
+
+25/07
+    strike_back():
+    -> Varre os riscos
+    -> Se uma peça esta a,eaçada apenas por outra:
+        -> Varre o alcandce da CPU
+        -> Se a CPU pode alcançar a ameaça:
+            -> adiciona na lista opt[]
+
+        -> Varre opt[] por ordem de peso: (prioridade de ataque com as peças de menor valor)
+            -> Se a peça não esta coberta e o movimento não irá te deixar em cheque:
+                -> faça o movimento de ataque
