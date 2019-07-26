@@ -21,8 +21,9 @@ def get_move(lit,board): # lit = sistema algébrico longo, ex: ('b1','a3') -> Ca
         positions()
         reachs()
         check_risk()
-#        check_game_stage()
-        defense()
+        if len(defense()) == 0:
+            check_game_stage()
+            attack()
 
 #    print('Colors:',cpu_color,plr_color)
 #    print('Positions:',cpu_pos,plr_pos)
@@ -176,6 +177,7 @@ def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
                 for y in x[0]:
                     if y == (in_risk[1][0][0],in_risk[1][0][1]):
                         opt.append((y,x[1]))
+
             for i in range(6):
                 for x in opt:  # organiza a lista de saidas, comer a peça mais valiosa primeiro
                     if piece_value(lit_ind(x[1])) == i:
@@ -184,26 +186,15 @@ def strike_back(): # Estou sendo ameaçado, posso contra-atacar?
                             put_on_board(resp)
                             return resp
 
-                        print('opt', x, x[0], lit_ind(x[1]))
-                        print('compare',compare(lit_ind(x[1]),x[0]))
-                        print('cover',cover(ind_lit(x[0])))
-                        print('simulate',simulate((lit_ind(x[1]),x[0]))[1])
-
-
-
-#            print('compare',in_risk[0],in_risk[1][0],compare(in_risk[0],in_risk[1][0]))
-#            if compare(in_risk[0],in_risk[1][0]): #compensa trocar as peças?
-#                if not (cover(ind_lit(in_risk[0]))): # minha peça não esta coberta?
-##                    return runaway(in_risk[0],chess_move.move_by_index(in_risk[0],tab))
-#                else:
-#                    print('deixa como esta, sua peça esta coberta e compensa a troca')
-#            else: # não compensa a troca
-#                return runaway(in_risk[0], chess_move.move_by_index(in_risk[0], tab))
-
-#        else:
-#            print('mais de uma ameaça')
-
-
+            if len(opt) == 0:  # não consigo contra atacar
+                opt = chess_move.move(ind_lit(in_risk[0]),tab)
+                for x in opt:
+                    if piece_value(in_risk[0]) > 1:
+                        if simulate((in_risk[0],x))[0] and not simulate((in_risk[0],x))[1]:
+                            resp = (ind_lit(in_risk[0]),ind_lit(x))
+                            print('escape ->',resp)
+                            put_on_board(resp)
+                            return resp
 
     return resp
 
@@ -257,6 +248,67 @@ def check_scape(): # Como vamos sair de um cheque?
 
     return runaway(king_pos, king_move)
 
+def attack():
+    print('Atacar!!!!')
+    print('game stage', game_stage)
+    resp = []
+    if cpu_color == language[1][0]:
+        base_line = 7
+    else:
+        base_line = 0
+
+    if game_stage == 1:
+        for i in range(6):
+            if tab[base_line][i+1][0] == cpu_color and not tab[base_line][i+1][1] == language[0][4] : # Abrindo a base line (sem mexer no rei nem nas torres por enquanto)
+                opt = chess_move.move(ind_lit((i+1,base_line)), tab)
+                x = 0
+                while x < len(opt): # remove os movimentos sobre o base line para liberar o mesmo
+                    print('opt',opt[x][1])
+                    if opt[x][1] == base_line:
+                        print('remove',x,'->',opt)
+                        opt.remove(opt[x])
+                        x = 0
+                    else:
+                        x+=1
+# PS: o i´nicio de jogo esta muito mecanizado, as peças precisam avançar mais
+                print('opt ->', opt)
+
+
+                if len(opt) == 0:
+                    print('abrir peões')
+                    open_paw()
+
+                else:
+                    resp = runaway((i+1,base_line), opt)
+                    print('base line',(i+1,base_line), opt)
+                    return resp
+
+    return resp
+
+def open_paw(): # abrir os peõs centrais em delta
+    resp = []
+    if cpu_color == language[1][0]:
+        base_paw = 6
+    else:
+        base_paw = 1
+
+    my_paws = []
+    for x in cpu_pos:
+        if tab[x[1]][x[0]][1] == language[0][5] and x[0]>1 and x[0]<6  and x[1] == base_paw:
+            my_paws.append(x)
+
+    if len(my_paws)>0:
+        for x in my_paws:
+            sum = 1
+            if x[0] == 4 or x[0] == 3:
+                sum = 2
+            resp = (ind_lit(x), ind_lit((x[0], x[1] + sum)))
+            put_on_board(resp)
+            return  resp
+
+    return resp
+
+
 # ------------------- UTEIS ------------------- #
 
 def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
@@ -306,7 +358,6 @@ def piece_value(piece):
 
 def runaway(piece, options):  # recebe um indice de uma peça em piece e as opções de fuga dela em options
     resp = []
-    print('runaway')
     if len(options) > 0:
         for i in range(6):
             for x in options:  # organiza a lista de saidas, comer a peça mais valiosa primeiro
