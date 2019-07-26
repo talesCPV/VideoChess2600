@@ -249,8 +249,8 @@ def check_scape(): # Como vamos sair de um cheque?
     return runaway(king_pos, king_move)
 
 def attack():
-    print('Atacar!!!!')
     print('game stage', game_stage)
+    kill_enemy()
     resp = []
     if cpu_color == language[1][0]:
         base_line = 7
@@ -299,15 +299,27 @@ def open_paw(): # abrir os peõs centrais em delta
 
     if len(my_paws)>0:
         for x in my_paws:
+            print('peão',x)
             sum = 1
             if x[0] == 4 or x[0] == 3:
                 sum = 2
             resp = (ind_lit(x), ind_lit((x[0], x[1] + sum)))
-            put_on_board(resp)
-            return  resp
+            if put_on_board(resp):
+                return  resp
 
     return resp
 
+def kill_enemy():
+    resp = []
+    for x in cpu_reach:
+        for y in x[0]:
+            for a in plr_pos:
+                if y == a: # Se eu alcanço
+                    if not cover(ind_lit(y)) or compare(lit_ind(x[1]),y): # se a peça não esta coberta ou a troca valer a pena
+                        resp = (x[1], ind_lit(y))
+                        put_on_board(resp)
+                        return resp
+    return resp
 
 # ------------------- UTEIS ------------------- #
 
@@ -315,7 +327,7 @@ def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
     index = (lit_ind(lit[0]),lit_ind(lit[1]))
     moves = chess_move.move(lit[0], tab)
     colors(index)
-    resp = True
+    resp = False
     try:
         x1 = index[0][0]
         y1 = index[0][1]
@@ -327,13 +339,13 @@ def put_on_board(lit):  # recebe os índices de tabuleiro e efetua a jogada
                 tab[y1][x1] = (' ', ' ')
                 print('->', x1, y1, '-', x2, y2,' | ', ind_lit((x1,y1)),'-', ind_lit((x2,y2)))
                 resp = True
-                break
+                return resp
             else:
                 resp = False
     except:
         print('jogada impossível')
         resp = False
-
+    print('put on board', resp)
     return resp
 
 def piece_value(piece):

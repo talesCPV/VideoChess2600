@@ -152,3 +152,7 @@
             -> Verificar o game stage
             -> Definir o base line (lado do tabuleiro que a cpu esta jogando)
             -> começar a liberar as peças do base line, fazendo um início de jogo
+
+26/07
+    kill_enemy():
+    -> função faz a busca por peças inimigas que possam ser atacadas
